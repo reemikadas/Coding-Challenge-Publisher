@@ -9,7 +9,7 @@ This repository demonstrates the output of the [SQL Notebook Publisher](https://
 <!-- challenge-counts:start -->
 |  | HackerRank | DataLemur | Total Challenges Solved |
 | --- | ---: | ---: | ---: |
-| Challenges Solved | 24 | 51 | 75 |
+| Challenges Solved | 24 | 52 | 76 |
 <!-- challenge-counts:end -->
 
 These totals are updated automatically whenever a Markdown solution is added to either challenge folder.
