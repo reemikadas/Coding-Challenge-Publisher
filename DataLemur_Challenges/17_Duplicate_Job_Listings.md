@@ -39,7 +39,7 @@ There is one company ID 345 that posted duplicate job listings. The duplicate li
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT COUNT(*) AS duplicate_companies

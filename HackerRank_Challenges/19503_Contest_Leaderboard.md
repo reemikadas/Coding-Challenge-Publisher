@@ -20,7 +20,7 @@ The following tables contain contest data:
 
   <img src="https://s3.amazonaws.com/hr-challenge-images/19503/1458523022-771511df90-ScreenShot2016-03-21at6.40.37AM.png"/>
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH max_score AS (

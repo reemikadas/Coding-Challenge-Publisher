@@ -46,7 +46,7 @@ Return the category name and product name in alphabetical order of the category.
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH best_category_by_sales AS (

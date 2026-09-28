@@ -42,7 +42,7 @@ The total sales for Biogen is \$4 million (\$2,041,758.41 + \$500,101.61 + \$1,0
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

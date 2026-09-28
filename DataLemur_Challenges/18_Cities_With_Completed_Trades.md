@@ -59,7 +59,7 @@ In the given dataset, San Francisco has the highest number of completed trade or
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

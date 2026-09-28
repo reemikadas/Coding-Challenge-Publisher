@@ -40,7 +40,7 @@ Please note that the output provided is for June 2022 as the `user_actions` tabl
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH june_user AS (

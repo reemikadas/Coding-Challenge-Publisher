@@ -22,7 +22,7 @@ __Sample Output__
     20 21
     22 23
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

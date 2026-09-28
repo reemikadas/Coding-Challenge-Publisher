@@ -49,7 +49,7 @@ So, the following students got <em>8</em>, <em>9</em> or <em>10</em> grades:
 	<li><em>Scarlet (grade 8)</em></li>
 </ul>
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

@@ -25,7 +25,7 @@ Your results must be in the form:
     
 where $lat$ is the sum of all values in *LAT\_N* and $lon$ is the sum of all values in *LONG\_W*. Both results must be rounded to a scale of $2$ decimal places.
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

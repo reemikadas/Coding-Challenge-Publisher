@@ -44,7 +44,7 @@ Zyprexa made the most profit (of \$84,576.53) followed by Varicose Relief (of \$
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH excluded_list AS (

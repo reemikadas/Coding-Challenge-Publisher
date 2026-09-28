@@ -34,7 +34,7 @@ In this example, `user_id` 2 is the only one who has gone on a shopping spree.
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH row_num_table AS (

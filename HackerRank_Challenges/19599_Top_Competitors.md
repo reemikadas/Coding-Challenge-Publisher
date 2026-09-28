@@ -30,7 +30,7 @@ The following tables contain contest data:
 
 ----
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

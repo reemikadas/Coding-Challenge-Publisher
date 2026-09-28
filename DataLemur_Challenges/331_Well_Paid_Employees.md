@@ -38,7 +38,7 @@ The output shows that Olivia Smith earns \$7,000, surpassing her manager, Willia
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH manager_table AS (

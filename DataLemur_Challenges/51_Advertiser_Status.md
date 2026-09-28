@@ -75,7 +75,7 @@ The transitions between payment statuses in the provided table can be summarized
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH full_outer_table AS (

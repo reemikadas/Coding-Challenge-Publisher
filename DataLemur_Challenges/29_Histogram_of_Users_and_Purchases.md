@@ -36,7 +36,7 @@ Output the user's most recent transaction date, user ID, and the number of produ
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH recent_transaction AS (

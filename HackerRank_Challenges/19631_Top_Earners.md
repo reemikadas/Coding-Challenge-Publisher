@@ -14,7 +14,7 @@ The **Employee** table containing employee data for a company is described as fo
 
 where _employee\_id_ is an employee's ID number, _name_ is their name, _months_ is the total number of months they've been working for the company, and _salary_ is the their monthly salary.
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

@@ -37,7 +37,7 @@ Based on the example output, the `order_occurrences` value of 1000 corresponds t
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH mode_table AS (

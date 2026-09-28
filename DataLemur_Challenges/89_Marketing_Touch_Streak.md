@@ -59,7 +59,7 @@ On the other hand, Contact ID 2 (rajan.bhatt@capitalone.com) is not included in 
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH distinct_week_table AS (

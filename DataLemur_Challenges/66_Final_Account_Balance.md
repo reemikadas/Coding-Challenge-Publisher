@@ -33,7 +33,7 @@ Using account ID 101 as an example, \$30.00 was deposited into this account, whi
 
 The dataset you are querying against may have different input & output - this is just an example!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

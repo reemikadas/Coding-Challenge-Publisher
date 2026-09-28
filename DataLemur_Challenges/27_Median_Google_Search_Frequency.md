@@ -35,7 +35,7 @@ The dataset you are querying against may have different input & output - **this 
 
 p.s. here's more [Google SQL Interview Questions](https://datalemur.com/blog/google-sql-interview-questions) to practice!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH RECURSIVE expand_searches AS (

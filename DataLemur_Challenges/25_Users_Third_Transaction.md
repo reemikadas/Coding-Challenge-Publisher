@@ -33,7 +33,7 @@ The dataset you are querying against may have different input & output - **this 
 
 p.s. for more Uber SQL interview tips & problems, check out the [Uber SQL Interview Guide](https://datalemur.com/blog/uber-sql-interview-questions)
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH uber_table AS (

@@ -39,7 +39,7 @@ Out of the total of 5 calls registered, one call was not categorised. Therefore,
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

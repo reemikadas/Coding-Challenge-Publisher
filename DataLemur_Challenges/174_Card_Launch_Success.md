@@ -41,7 +41,7 @@ The dataset you are querying against may have different input & output - **this 
 
 **Hint**: Try using a [window functio](https://datalemur.com/blog/sql-window-functions-interview-questions)n 👀
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH launch_month_table AS (

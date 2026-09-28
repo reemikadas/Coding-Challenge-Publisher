@@ -37,7 +37,7 @@ Rick is a senior manager who has one manager directly reporting to him, which is
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH reporting_table AS (

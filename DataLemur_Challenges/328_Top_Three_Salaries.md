@@ -62,7 +62,7 @@ The output displays the high earners in each department.
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH high_earners_table AS (

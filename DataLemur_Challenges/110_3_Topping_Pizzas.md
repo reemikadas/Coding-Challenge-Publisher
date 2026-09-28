@@ -46,7 +46,7 @@ Additionally, they are arranged alphabetically; in the dictionary, the chicken c
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH 3_topping_pizza AS (

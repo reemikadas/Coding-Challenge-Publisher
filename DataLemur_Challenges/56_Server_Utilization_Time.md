@@ -37,7 +37,7 @@ In the example output, the combined uptime of all the servers (from each start t
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH server_uptime AS (

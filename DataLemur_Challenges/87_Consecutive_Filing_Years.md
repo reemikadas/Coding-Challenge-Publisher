@@ -39,7 +39,7 @@ User 1 has consistently filed their taxes using TurboTax for 3 consecutive years
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

@@ -21,7 +21,7 @@ The **OCCUPATIONS** table is described as follows:
 <img src="https://s3.amazonaws.com/hr-challenge-images/12889/1443816414-2a465532e7-1.png" />
 *Occupation* will only contain one of the following values: **Doctor**, **Professor**, **Singer** or **Actor**.
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 # First Query

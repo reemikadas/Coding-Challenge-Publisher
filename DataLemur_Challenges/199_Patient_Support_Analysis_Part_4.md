@@ -54,7 +54,7 @@ Call counts: Jan - 1 call; Feb - 0 call; Mar - 1 call; Apr - 3 calls; May - 2 ca
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH long_calls_table AS (

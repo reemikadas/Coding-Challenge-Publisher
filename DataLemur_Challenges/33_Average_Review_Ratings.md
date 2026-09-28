@@ -43,7 +43,7 @@ The dataset you are querying against may have different input & output - **this 
 Here's some more Amazon SQL Interview Questions:
 ![Amazon SQL Interview Questions](https://api.datalemur.com/assets/74d0a619-2138-4e73-bd02-91d5c02d208e)
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

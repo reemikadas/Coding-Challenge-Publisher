@@ -38,7 +38,7 @@ The only caller who made three, or more calls is policy holder ID 2.
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

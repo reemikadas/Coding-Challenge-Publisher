@@ -20,7 +20,7 @@ The **EMPLOYEES** table is described as follows:
 
 $1000 \lt \text{Salary} \lt 10^5$.
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

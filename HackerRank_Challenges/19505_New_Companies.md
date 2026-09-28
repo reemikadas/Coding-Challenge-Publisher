@@ -31,7 +31,7 @@ The following tables contain company data:
 
 ----
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

@@ -36,7 +36,7 @@ The following tables hold interview data:
 
 ----
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH submission_stats_agg AS

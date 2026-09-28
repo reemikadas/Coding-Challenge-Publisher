@@ -46,7 +46,7 @@ Moving on to May 2022, we still have 2 reactivated users. User 123, who had prev
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH reactivated_user AS (

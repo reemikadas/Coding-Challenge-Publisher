@@ -16,7 +16,7 @@ The **OCCUPATIONS** table is described as follows:
 
 *Occupation* will only contain one of the following values: **Doctor**, **Professor**, **Singer** or **Actor**.
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH pivot_table AS (

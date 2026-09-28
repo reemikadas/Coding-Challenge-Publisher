@@ -45,7 +45,7 @@ To calculate the year-on-year growth rate, we compare the current year's spend w
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH yoy_rate AS (

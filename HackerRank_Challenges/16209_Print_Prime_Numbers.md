@@ -10,7 +10,7 @@ For example, the output for all prime numbers ≤ 10 would be:
 	
     2&3&5&7
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH RECURSIVE numbers AS (

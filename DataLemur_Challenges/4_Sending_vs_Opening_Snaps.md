@@ -64,7 +64,7 @@ So, the percentage of time spent sending snaps is 5.67 / (5.67 + 3) = 65.4%, and
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH time_spent_table AS (

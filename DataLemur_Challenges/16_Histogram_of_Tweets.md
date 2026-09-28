@@ -38,7 +38,7 @@ Based on the example output, there are two users who posted only one tweet in 20
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH tweet_bucket AS (

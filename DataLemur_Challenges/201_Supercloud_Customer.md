@@ -51,7 +51,7 @@ Customer 1 bought from Analytics, Containers, and Compute categories of Azure, a
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

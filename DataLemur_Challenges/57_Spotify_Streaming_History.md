@@ -58,7 +58,7 @@ However, the streaming data for User 695 with the song ID 9852 are not included 
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH songs_metadata AS (

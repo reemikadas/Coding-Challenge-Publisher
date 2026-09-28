@@ -33,7 +33,7 @@ p.s. If you've read the [Ace the Data Science Interview](https://www.amazon.com/
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

@@ -39,7 +39,7 @@ Policy holder IDs 14 and 15 each made two calls within a 7-day interval. For exa
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH seven_day_interval AS (

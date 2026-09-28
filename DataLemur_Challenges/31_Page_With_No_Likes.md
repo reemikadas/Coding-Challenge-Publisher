@@ -44,7 +44,7 @@ The dataset you are querying against may have different input & output - **this 
 
 p.s. If you have literally no idea how to solve this, maybe give our [free SQL tutorial](https://datalemur.com/sql-tutorial) a try first?
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

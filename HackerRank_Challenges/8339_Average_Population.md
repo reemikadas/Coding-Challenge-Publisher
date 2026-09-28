@@ -11,7 +11,7 @@ Query the average population for all cities in **CITY**, rounded *down* to the n
 The **CITY** table is described as follows:
 <img src="https://s3.amazonaws.com/hr-challenge-images/8137/1449729804-f21d187d0f-CITY.jpg" title="CITY.jpg" />
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT FLOOR(AVG(population)) AS average_population

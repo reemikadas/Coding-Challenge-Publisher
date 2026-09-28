@@ -55,7 +55,7 @@ The dataset you are querying against may have different input & output - **this 
 To get more insight into the Amazon SQL interview process, practice these [Amazon SQL interview questions](https://datalemur.com/blog/amazon-sql-interview-questions):
 ![Amazon SQL Interview Guide](https://api.datalemur.com/assets/74d0a619-2138-4e73-bd02-91d5c02d208e)
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH batch_summary AS (

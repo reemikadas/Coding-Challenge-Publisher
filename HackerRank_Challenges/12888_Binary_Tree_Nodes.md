@@ -37,7 +37,7 @@ The <em>Binary Tree</em> below illustrates the sample:
 
 <img src="https://s3.amazonaws.com/hr-challenge-images/12888/1443773633-f9e6fd314e-simply_sql_bst.png" />
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT 

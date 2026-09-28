@@ -54,7 +54,7 @@ There is a total of 4 calls with 2 of them being international calls (from calle
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH international_call_table AS (

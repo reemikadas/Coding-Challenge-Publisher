@@ -16,7 +16,7 @@ The **CITY** and **COUNTRY** tables are described as follows:
 
 <img src="https://s3.amazonaws.com/hr-challenge-images/8342/1449769013-e54ce90480-Country.jpg" title="Country.jpg" />
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

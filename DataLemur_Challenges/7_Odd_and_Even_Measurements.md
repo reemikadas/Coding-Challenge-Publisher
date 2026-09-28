@@ -46,7 +46,7 @@ The dataset you are querying against may have different input & output - **this 
 
 p.s. read this blog post for more [Google SQL Interview Questions](https://datalemur.com/blog/google-sql-interview-questions)
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH odd_even_sum AS (

@@ -55,7 +55,7 @@ The output indicates that 191 employees did not run any queries, 46 employees ra
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH query_count AS (

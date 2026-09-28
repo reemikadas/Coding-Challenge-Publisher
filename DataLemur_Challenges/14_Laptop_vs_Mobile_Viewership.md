@@ -38,7 +38,7 @@ Based on the example input, there are a total of 2 laptop views and 3 mobile vie
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

@@ -44,7 +44,7 @@ p.s. give the hints below a try if you're stuck and don't know where to start!
 
 p.p.s if you find this problem too tricky, even after the hints, check out my [30-day SQL learning roadmap](https://datalemur.com/blog/learn-sql-in-30-days-roadmap), which features my favorite **free** resources to learn SQL! After you strengthen your SQL foundations, I'm sure you'll be more than ready to tackle this question!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

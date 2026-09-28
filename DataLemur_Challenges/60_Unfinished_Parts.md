@@ -43,7 +43,7 @@ The bumpers in step 3 and 4 are the only item that remains unfinished as it lack
 
 The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 SELECT

@@ -41,7 +41,7 @@ The Bloomberg terminal is the go-to resource for financial professionals, offeri
 
   The dataset you are querying against may have different input & output - **this is just an example**!
 
-## SQL Solution
+## SQL Solution #1
 
 ~~~sql
 WITH rank_table AS (
