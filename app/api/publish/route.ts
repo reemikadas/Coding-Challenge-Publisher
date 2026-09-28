@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-type PublishRequest = { challengeNumber?:string; challengeTitle?:string; repository?:string; branch?:string; directory?:string; token?:string; filename?:string; markdown?:string; overwrite?:boolean };
+type PublishRequest = { challengeNumber?:string; challengeTitle?:string; language?:string; repository?:string; branch?:string; directory?:string; token?:string; filename?:string; markdown?:string; overwrite?:boolean };
 function cleanPathPart(value:string) { return value.split("/").filter((part) => part && part !== "." && part !== "..").join("/"); }
 function encodePath(path:string) { return path.split("/").map(encodeURIComponent).join("/"); }
 function toBase64(value:string) { const bytes=new TextEncoder().encode(value); let binary=""; for(const byte of bytes) binary+=String.fromCharCode(byte); return btoa(binary); }
@@ -17,7 +17,8 @@ export async function POST(request:Request) {
   const existing=await githubRequest(`${endpoint}?ref=${encodeURIComponent(branch)}`,token);
   if(existing.ok) { if(!body.overwrite) return NextResponse.json({message:`${path} already exists. Enable replace to update it.`},{status:409}); const existingFile=(await existing.json()) as {sha?:string}; existingSha=existingFile.sha; }
   else if(existing.status!==404) { const failure=(await existing.json().catch(()=>({}))) as {message?:string}; return NextResponse.json({message:failure.message||"GitHub could not access that repository."},{status:existing.status}); }
-  const commitMessage=existingSha?`Update SQL challenge ${body.challengeNumber||body.challengeTitle||"solution"}`:`Add SQL challenge ${body.challengeNumber||body.challengeTitle||"solution"}`;
+  const language=body.language==="Python"?"Python":"SQL";
+  const commitMessage=existingSha?`Update ${language} challenge ${body.challengeNumber||body.challengeTitle||"solution"}`:`Add ${language} challenge ${body.challengeNumber||body.challengeTitle||"solution"}`;
   const response=await githubRequest(endpoint,token,{method:"PUT",headers:{"content-type":"application/json"},body:JSON.stringify({message:commitMessage,content:toBase64(markdown),branch,...(existingSha?{sha:existingSha}:{})})});
   const result=(await response.json().catch(()=>({}))) as {message?:string;content?:{html_url?:string}};
   if(!response.ok) return NextResponse.json({message:result.message||"GitHub rejected the commit."},{status:response.status});

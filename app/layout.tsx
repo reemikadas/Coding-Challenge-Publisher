@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SQL Challenge Publisher",
-  description: "Turn coding challenges and SQL solutions into Markdown and publish them to GitHub.",
+  title: "Challenge Notebook Publisher",
+  description: "Turn SQL and Python coding challenges into Markdown and publish them to GitHub.",
   other: {
     "codex-preview": "development",
   },

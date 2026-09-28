@@ -4,6 +4,8 @@ type ChallengeUrl =
   | { provider: "HackerRank"; contest: string; slug: string }
   | { provider: "DataLemur"; slug: string };
 
+type ChallengeLanguage = "SQL" | "Python";
+
 type HackerRankChallenge = {
   id?: number | string;
   name?: string;
@@ -65,7 +67,7 @@ function parseChallengeUrl(rawUrl: string): ChallengeUrl {
   throw new Error("Only public HackerRank and DataLemur question links are supported.");
 }
 
-async function importHackerRank(challenge: Extract<ChallengeUrl, { provider: "HackerRank" }>) {
+async function importHackerRank(challenge: Extract<ChallengeUrl, { provider: "HackerRank" }>, language: ChallengeLanguage) {
   const endpoint = `https://www.hackerrank.com/rest/contests/${encodeURIComponent(challenge.contest)}/challenges/${encodeURIComponent(challenge.slug)}`;
   let response: Response;
   try {
@@ -98,7 +100,7 @@ async function importHackerRank(challenge: Extract<ChallengeUrl, { provider: "Ha
     title: model.name.trim(),
     question: sections.join("\n\n"),
     difficulty: meaningful(model.difficulty_name) ? model.difficulty_name.trim() : null,
-    dialect: null,
+    runtime: language === "Python" ? "Python 3" : null,
   };
 }
 
@@ -119,7 +121,7 @@ function extractDataLemurChallenge(html: string): DataLemurChallenge | null {
   return null;
 }
 
-async function importDataLemur(challenge: Extract<ChallengeUrl, { provider: "DataLemur" }>) {
+async function importDataLemur(challenge: Extract<ChallengeUrl, { provider: "DataLemur" }>, language: ChallengeLanguage) {
   const endpoint = `https://datalemur.com/questions/${encodeURIComponent(challenge.slug)}`;
   let response: Response;
   try {
@@ -149,8 +151,9 @@ async function importDataLemur(challenge: Extract<ChallengeUrl, { provider: "Dat
   if (model.isGuarded || (Array.isArray(model.accessGroups) && model.accessGroups.length > 0) || !meaningful(model.description)) {
     throw new Error("This DataLemur question is premium or not publicly available. Paste the question manually instead.");
   }
-  if (meaningful(model.category) && model.category.toUpperCase() !== "SQL") {
-    throw new Error("Only DataLemur SQL questions are supported.");
+  const category = meaningful(model.category) ? model.category.trim().toUpperCase() : "";
+  if (category && category !== language.toUpperCase()) {
+    throw new Error(`This is a DataLemur ${model.category} question. Switch the publisher to ${model.category} and import it again.`);
   }
 
   return {
@@ -159,15 +162,17 @@ async function importDataLemur(challenge: Extract<ChallengeUrl, { provider: "Dat
     title: model.title.trim(),
     question: model.description.trim(),
     difficulty: meaningful(model.difficulty) ? model.difficulty.trim() : null,
-    dialect: "MySQL",
+    runtime: language === "Python" ? "Python 3" : "MySQL",
   };
 }
 
 export async function POST(request: Request) {
   let rawUrl = "";
+  let language: ChallengeLanguage = "SQL";
   try {
-    const body = (await request.json()) as { url?: unknown };
+    const body = (await request.json()) as { url?: unknown; language?: unknown };
     rawUrl = typeof body.url === "string" ? body.url.trim() : "";
+    language = body.language === "Python" ? "Python" : "SQL";
   } catch {
     return NextResponse.json({ message: "The request was not valid JSON." }, { status: 400 });
   }
@@ -180,7 +185,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = challenge.provider === "HackerRank" ? await importHackerRank(challenge) : await importDataLemur(challenge);
+    const result = challenge.provider === "HackerRank" ? await importHackerRank(challenge, language) : await importDataLemur(challenge, language);
     return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : "The challenge could not be imported.";
