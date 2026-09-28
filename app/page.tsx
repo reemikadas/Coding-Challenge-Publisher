@@ -128,7 +128,7 @@ export default function Home() {
     <main className="app-shell">
       <Toaster richColors position="top-right" />
       <header className="topbar">
-        <div className="brand"><div className="brand-mark" aria-hidden="true"><FileCode2 size={25} /></div><h1>Challenge Notebook <span>Publisher</span></h1></div>
+        <div className="brand"><div className="brand-mark" aria-hidden="true"><FileCode2 size={25} /></div><h1>Coding-Challenge-<span>Publisher</span></h1></div>
         <div className="header-journey" aria-label="Workflow"><span>Solve</span><b>›</b><span>Document</span><b>›</b><span>Share</span><b>›</b><span>Build your portfolio</span></div>
       </header>
       <section className="mode-strip" aria-label="Challenge type and platform">
@@ -146,7 +146,7 @@ export default function Home() {
       <section className="repo-strip" aria-labelledby="destination-title">
         <div className="repo-heading"><GitFork size={18} /><div><h2 id="destination-title">GitHub destination</h2><p>Choose where the generated Markdown file should be committed.</p></div><div className="privacy-note"><LockKeyhole size={14} />Token used once, never saved</div></div>
         <div className="repo-grid">
-          <div><FieldLabel id="repository">Repository</FieldLabel><Input id="repository" placeholder="username/challenge-journal" value={form.repository} onChange={(event) => update("repository", event.target.value)} /></div>
+          <div><FieldLabel id="repository">Repository</FieldLabel><Input id="repository" placeholder="username/coding-challenge-publisher" value={form.repository} onChange={(event) => update("repository", event.target.value)} /></div>
           <div><FieldLabel id="branch">Branch</FieldLabel><Input id="branch" value={form.branch} onChange={(event) => update("branch", event.target.value)} /></div>
           <div><FieldLabel id="directory" optional>Folder</FieldLabel><Input id="directory" value={form.directory} onChange={(event) => update("directory", event.target.value)} /><p className="field-help">Change this if you use a custom folder.</p></div>
           <div><FieldLabel id="token">Fine-grained token</FieldLabel><Input id="token" type="password" autoComplete="off" placeholder="github_pat_…" value={form.token} onChange={(event) => update("token", event.target.value)} /><p className="field-help">Requires Contents: read and write.</p></div>

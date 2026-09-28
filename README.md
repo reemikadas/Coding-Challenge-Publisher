@@ -1,34 +1,43 @@
-# SQL Challenge Publisher
+# Coding-Challenge-Publisher
 
-A public web application for importing supported SQL challenges, combining them with MySQL solutions, generating consistent Markdown files, and committing those files directly to GitHub.
+Coding-Challenge-Publisher is a public web application for turning HackerRank and DataLemur challenges into consistent Markdown portfolio entries. Import a public challenge, add one or more SQL or Python solutions, preview the result, and publish it directly to a GitHub repository.
 
-**Live application:** [SQL Challenge Publisher](https://sql-challenge-publisher.das-reemika.chatgpt.site)
+**Live application:** [Coding-Challenge-Publisher](https://challenge-publisher.das-reemika.chatgpt.site/)
 
 ## Features
 
-- Start from prominent HackerRank and DataLemur buttons in the **01 / COMPOSE** workspace
-- Import public SQL problem statements from HackerRank and DataLemur question URLs
-- Name every challenge file from its challenge number and title, such as `19506_Weather_Observation_Station_1.md` or `31_Page_With_No_Likes.md`
-- Choose MySQL or PostgreSQL as the SQL dialect and include that choice in the generated Markdown
-- Preview the generated Markdown and filename before publishing
-- Clear the current challenge while keeping the GitHub destination and token ready for the next one
-- Commit one Markdown file per challenge to a selected GitHub repository and folder
-- Protect existing files unless replacement is explicitly enabled
-- Keep GitHub tokens ephemeral—the application does not save them
+- Import public HackerRank and DataLemur challenge descriptions from an individual challenge URL.
+- Document SQL solutions using MySQL or PostgreSQL.
+- Document Python solutions using Python 3.
+- Add multiple SQL and Python solutions to the same challenge file.
+- Generate filenames in `<Challenge #>_<Title>.md` format.
+- Preview the filename and rendered Markdown before publishing.
+- Publish to a selected GitHub repository, branch, and folder.
+- Load an existing Markdown file from GitHub, edit it in the app, and publish the updated version.
+- Protect existing files unless **Replace the file if it already exists** is enabled.
+- Clear the current challenge while retaining the GitHub destination settings for the next entry.
+- Use GitHub tokens only for the requested operation; the application does not save them.
 
-## How it works
+## How to use the application
 
-1. Enter the destination repository as `username/repository`.
-2. Enter the destination branch and optional folder.
-3. Enter a fine-grained GitHub token scoped to that repository with **Contents: read and write** permission.
-4. Under **01 / COMPOSE**, select **HackerRank** or **DataLemur**. The selected platform opens separately so the user signs in directly with that provider.
-5. Choose and solve a SQL challenge, copy its individual URL from the address bar, and return to the publisher.
-6. Paste the URL into **Challenge URL** and select **Import question**. Catalog pages are not supported.
-7. Review the imported details and paste the accepted MySQL solution into **SQL Solution #**.
-8. Review the generated Markdown and filename, then select **Create & push Markdown**.
-9. Select **Clear challenge** before starting the next problem. Repository, branch, folder, token, and SQL dialect are preserved.
+1. Open [Coding-Challenge-Publisher](https://challenge-publisher.das-reemika.chatgpt.site/).
+2. Enter the destination repository as `owner/repository`, its branch, and an optional folder.
+3. Enter a fine-grained GitHub token restricted to that repository with **Contents: read and write** permission.
+4. Select **SQL** or **Python**, then open HackerRank or DataLemur from the platform buttons.
+5. Solve a challenge on the provider's website and copy its individual challenge URL.
+6. Return to the publisher, paste the URL into **Challenge URL**, and select **Import question**.
+7. Review the imported challenge number, title, and question.
+8. Choose the solution language and runtime or dialect, then paste the accepted solution.
+9. Select **Add another solution** when the same challenge should contain another SQL or Python approach.
+10. Review the generated filename and Markdown preview.
+11. Select **Create & push Markdown** to publish the file to GitHub.
 
-The importer reads public challenge text only. It does not access DataLemur premium questions, provider login details, private editors, or submissions. SQL solutions therefore remain a user-provided field.
+## Update an existing Markdown file
+
+1. Enter the repository, branch, fine-grained token, and the complete file path—for example, `HackerRank_Challenges/12889_Occupations.md`.
+2. Select **Load from GitHub**.
+3. Edit the challenge or its solutions. You can also add another SQL or Python solution.
+4. Review the preview and select **Create & push Markdown**. Replacement is enabled automatically for the loaded file.
 
 ## Run locally
 
@@ -47,24 +56,24 @@ Open the local URL shown in the terminal.
 npm run build
 ```
 
-The application uses server-side API routes for HackerRank imports and GitHub commits.
+The application uses server-side API routes to import public challenge text and communicate with GitHub.
 
 ## Repository branches
 
-- `main` stores published SQL challenge Markdown files.
-- `WebApp` stores this application's source code.
-
-In the application, use **Branch** `main` and select a provider-specific folder such as `HackerRank_Challenges` or `DataLemur_Challenges` to keep solutions organized.
+- `main` stores published challenge Markdown files and the portfolio README.
+- `WebApp` stores the Coding-Challenge-Publisher source code.
 
 ## Deployment
 
-The current production deployment is hosted with ChatGPT Sites.
+The production application is hosted with ChatGPT Sites at [challenge-publisher.das-reemika.chatgpt.site](https://challenge-publisher.das-reemika.chatgpt.site/).
 
-GitHub Pages cannot host this project unchanged because Pages serves static files and cannot run the two server-side API routes. The repository can still be used as the source for an automatic deployment through a server-capable Git-connected host, such as Cloudflare Workers, after configuring that provider's deployment credentials.
+GitHub Pages cannot host this application unchanged because Pages does not run the server-side routes used for imports and GitHub publishing.
 
-## Security
+## Privacy and security
 
 - Use a fine-grained GitHub token restricted to the intended repository.
 - Grant only **Contents: read and write** permission.
-- Do not commit tokens to this repository or save them in browser password storage.
-- Sign in to HackerRank and DataLemur only on their official websites; the publisher never requests or stores those login details.
+- Never commit a token to the repository or include it in a Markdown file.
+- The application does not save GitHub tokens.
+- Sign in to HackerRank and DataLemur only on their official websites. The publisher never requests or stores those login details.
+- DataLemur premium content and private provider submissions are not accessed.

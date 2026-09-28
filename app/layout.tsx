@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Challenge Notebook Publisher",
+  title: "Coding-Challenge-Publisher",
   description: "Turn SQL and Python coding challenges into Markdown and publish them to GitHub.",
   other: {
     "codex-preview": "development",
