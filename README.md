@@ -16,7 +16,7 @@ These totals are updated automatically when Markdown files are added to `HackerR
 
 ## Coding Challenge Publisher web app
 
-<a href="https://challenge-publisher.das-reemika.chatgpt.site/"><img width="669" height="2386" alt="Coding Challenge Publisher interface showing the challenge editor, solution workspace, GitHub destination, and Markdown preview" src="https://github.com/user-attachments/assets/494f5ed9-f326-4c8f-b180-46ed462e5525" /></a>
+<a href="https://challenge-publisher.das-reemika.chatgpt.site/"><img width="760" alt="Coding Challenge Publisher interface showing the challenge editor, solution workspace, GitHub destination, and Markdown preview" src="assets/coding-challenge-publisher-square.png" /></a>
 
 ## What the web app supports
 
