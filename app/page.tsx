@@ -26,7 +26,7 @@ function markdownFor(form: FormState) {
   const heading = [form.challengeNumber && `${providerPrefix}Challenge ${form.challengeNumber}`, form.challengeTitle].filter(Boolean).join(": ") || `${primaryLanguage} Challenge`;
   const source = form.challengeUrl ? `\n**Source:** [View challenge](${form.challengeUrl})\n` : "";
   const solutionSections = form.solutions.map((solution, index) => {
-    const number = form.solutions.length > 1 ? ` #${index + 1}` : "";
+    const number = ` #${index + 1}`;
     const fence = solution.language === "Python" ? "python" : "sql";
     const placeholder = solution.language === "Python" ? "# Your Python solution will appear here." : "-- Your SQL solution will appear here.";
     const metadata = solution.language === "Python" ? `Runtime: ${solution.runtime || "Python 3"}` : `Dialect: ${solution.runtime || "SQL"}`;
@@ -40,12 +40,15 @@ export default function Home() {
   const [form, setForm] = useState<FormState>(initialForm);
   const [isPublishing, setIsPublishing] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const [isLoadingExisting, setIsLoadingExisting] = useState(false);
   const [imported, setImported] = useState(false);
+  const [existingPath, setExistingPath] = useState("");
+  const [existingFilename, setExistingFilename] = useState("");
   const [publishedUrl, setPublishedUrl] = useState<string | null>(null);
   const primarySolution = form.solutions[0];
   const hasChallengeDraft = Boolean(form.challengeNumber.trim() || form.challengeTitle.trim() || form.challengeUrl.trim() || form.question.trim() || form.solutions.some((solution) => solution.code.trim()));
   const markdown = useMemo(() => hasChallengeDraft ? markdownFor(form) : "", [form, hasChallengeDraft]);
-  const filename = filenameFor(form.challengeNumber, form.challengeTitle);
+  const filename = existingFilename || filenameFor(form.challengeNumber, form.challengeTitle);
   const platformUrls = primarySolution.language === "Python" ? { HackerRank: "https://www.hackerrank.com/domains/python", DataLemur: "https://datalemur.com/questions?category=Python" } : { HackerRank: "https://www.hackerrank.com/domains/sql", DataLemur: "https://datalemur.com/questions?category=SQL" };
 
   useEffect(() => {
@@ -87,6 +90,20 @@ export default function Home() {
     setPublishedUrl(null);
   }
   function removeSolution(id: number) { setForm((current) => ({ ...current, solutions: current.solutions.filter((solution) => solution.id !== id) })); setPublishedUrl(null); }
+  async function loadExistingMarkdown() {
+    if (!existingPath.trim()) return;
+    setIsLoadingExisting(true);
+    try {
+      const response = await fetch("/api/load-markdown", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ repository: form.repository, branch: form.branch, path: existingPath, token: form.token }) });
+      const result = (await response.json()) as { message?: string; filename?: string; directory?: string; provider?: ChallengeProvider; challengeNumber?: string; title?: string; challengeUrl?: string; question?: string; solutions?: SolutionState[] };
+      if (!response.ok || !result.filename || !result.solutions?.length) throw new Error(result.message || "The Markdown file could not be loaded.");
+      setForm((current) => ({ ...current, provider: result.provider || "", challengeNumber: result.challengeNumber || "", challengeTitle: result.title || "", challengeUrl: result.challengeUrl || "", question: result.question || "", solutions: result.solutions!, directory: result.directory || "", overwrite: true }));
+      setExistingFilename(result.filename);
+      setImported(true);
+      setPublishedUrl(null);
+      toast.success("Existing Markdown loaded and ready to update");
+    } catch (error) { toast.error(error instanceof Error ? error.message : "Loading failed."); } finally { setIsLoadingExisting(false); }
+  }
   async function importChallenge() {
     if (!form.challengeUrl.trim()) return;
     setIsImporting(true); setImported(false);
@@ -98,7 +115,7 @@ export default function Home() {
       setImported(true); setPublishedUrl(null); toast.success("Challenge question imported");
     } catch (error) { toast.error(error instanceof Error ? error.message : "Import failed."); } finally { setIsImporting(false); }
   }
-  function clearChallenge() { setForm((current) => ({ ...current, provider: "", challengeNumber: "", challengeTitle: "", challengeUrl: "", question: "", solutions: [{ ...current.solutions[0], code: "" }], overwrite: false })); setImported(false); setPublishedUrl(null); toast.success("Ready for the next challenge"); }
+  function clearChallenge() { setForm((current) => ({ ...current, provider: "", challengeNumber: "", challengeTitle: "", challengeUrl: "", question: "", solutions: [{ ...current.solutions[0], code: "" }], overwrite: false })); setExistingPath(""); setExistingFilename(""); setImported(false); setPublishedUrl(null); toast.success("Ready for the next challenge"); }
   async function copySolution(solution: SolutionState) { if (!solution.code) return; await navigator.clipboard.writeText(solution.code); toast.success(`${solution.language} solution copied`); }
   async function publish() {
     setIsPublishing(true); setPublishedUrl(null);
@@ -134,6 +151,10 @@ export default function Home() {
           <div><FieldLabel id="directory" optional>Folder</FieldLabel><Input id="directory" value={form.directory} onChange={(event) => update("directory", event.target.value)} /><p className="field-help">Change this if you use a custom folder.</p></div>
           <div><FieldLabel id="token">Fine-grained token</FieldLabel><Input id="token" type="password" autoComplete="off" placeholder="github_pat_…" value={form.token} onChange={(event) => update("token", event.target.value)} /><p className="field-help">Requires Contents: read and write.</p></div>
         </div>
+        <div className="existing-file-row">
+          <div><FieldLabel id="existing-path" optional>Existing Markdown path</FieldLabel><Input id="existing-path" placeholder="HackerRank_Challenges/12889_Occupations.md" value={existingPath} onChange={(event) => { setExistingPath(event.target.value); setExistingFilename(""); }} /></div>
+          <Button type="button" variant="outline" disabled={!form.repository.trim() || !form.branch.trim() || !form.token.trim() || !existingPath.trim() || isLoadingExisting} onClick={loadExistingMarkdown}>{isLoadingExisting ? <><Loader2 className="animate-spin" /> Loading…</> : <><Download /> Load from GitHub</>}</Button>
+        </div>
       </section>
       <div className="workspace">
         <section className="editor-column" aria-labelledby="editor-title">
@@ -168,7 +189,7 @@ export default function Home() {
         <aside className="preview-column" aria-labelledby="preview-title">
           <div className="preview-heading"><div><Eye size={21} /><h2 id="preview-title">Markdown preview</h2></div><span className="preview-filename"><FileCode2 />{filename || "No challenge loaded"}</span></div>
           <article className="markdown-preview" aria-label="Generated Markdown preview">
-            {hasChallengeDraft ? <><h3><span>#</span> {form.challengeTitle || "Coding Challenge"}</h3><div className="preview-badges">{form.solutions.map((solution, index) => <span key={solution.id}>{solution.language === "Python" ? <span className="python-mini-logo" aria-hidden="true" /> : <Database />}#{index + 1} {solution.language} · {solution.runtime}</span>)}{form.provider && <span>{form.provider}</span>}{form.challengeNumber && <span>Challenge #{form.challengeNumber}</span>}</div><hr /><section><h4>## Challenge</h4><p className="challenge-copy">{form.question || "Your challenge question will appear here."}</p></section>{form.challengeUrl && <p className="source-link"><strong>Source:</strong> {form.challengeUrl}</p>}{form.solutions.map((solution, index) => <section key={solution.id}><h4>## {solution.language} Solution{form.solutions.length > 1 ? ` #${index + 1}` : ""}</h4><pre className="solution-preview"><code>{solution.code || (solution.language === "Python" ? "# Your Python solution will appear here." : "-- Your SQL solution will appear here.")}</code></pre><p className="runtime-note">{solution.language === "Python" ? "Runtime" : "Dialect"}: {solution.runtime}</p></section>)}</> : <div className="empty-preview"><FileCode2 /><h3>Your Markdown will appear here</h3><p>Import a challenge, then add one or more SQL or Python solutions.</p></div>}
+            {hasChallengeDraft ? <><h3><span>#</span> {form.challengeTitle || "Coding Challenge"}</h3><div className="preview-badges">{form.solutions.map((solution, index) => <span key={solution.id}>{solution.language === "Python" ? <span className="python-mini-logo" aria-hidden="true" /> : <Database />}#{index + 1} {solution.language} · {solution.runtime}</span>)}{form.provider && <span>{form.provider}</span>}{form.challengeNumber && <span>Challenge #{form.challengeNumber}</span>}</div><hr /><section><h4>## Challenge</h4><p className="challenge-copy">{form.question || "Your challenge question will appear here."}</p></section>{form.challengeUrl && <p className="source-link"><strong>Source:</strong> {form.challengeUrl}</p>}{form.solutions.map((solution, index) => <section key={solution.id}><h4>## {solution.language} Solution #{index + 1}</h4><pre className="solution-preview"><code>{solution.code || (solution.language === "Python" ? "# Your Python solution will appear here." : "-- Your SQL solution will appear here.")}</code></pre><p className="runtime-note">{solution.language === "Python" ? "Runtime" : "Dialect"}: {solution.runtime}</p></section>)}</> : <div className="empty-preview"><FileCode2 /><h3>Your Markdown will appear here</h3><p>Import a challenge, then add one or more SQL or Python solutions.</p></div>}
           </article>
           <details className="raw-markdown"><summary>View raw Markdown</summary><pre><code>{markdown}</code></pre></details>
         </aside>
