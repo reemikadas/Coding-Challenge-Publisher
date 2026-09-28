@@ -1,8 +1,8 @@
-# Coding-Challenge-Publisher
+# Coding Challenge Publisher
 
-Coding-Challenge-Publisher is a reusable challenge journal and publishing application for anyone who wants to organize SQL and Python practice solutions on GitHub. Each challenge is stored as an individual Markdown file containing the public problem statement, a link to the original HackerRank or DataLemur challenge, and one or more documented solutions.
+Coding Challenge Publisher is a reusable challenge journal and publishing application for anyone who wants to organize SQL and Python practice solutions on GitHub. Each challenge is stored as an individual Markdown file containing the public problem statement, a link to the original HackerRank or DataLemur challenge, and one or more documented solutions.
 
-This `main` branch demonstrates the Markdown produced by the public [Coding-Challenge-Publisher](https://challenge-publisher.das-reemika.chatgpt.site/). The application source is maintained on the [`WebApp` branch](https://github.com/reemikadas/Coding-Challenge-Publisher/tree/WebApp).
+This `main` branch demonstrates the Markdown produced by the public [Coding Challenge Publisher](https://challenge-publisher.das-reemika.chatgpt.site/). The application source is maintained on the [`WebApp` branch](https://github.com/reemikadas/Coding-Challenge-Publisher/tree/WebApp).
 
 ## Challenges solved
 
@@ -14,9 +14,9 @@ This `main` branch demonstrates the Markdown produced by the public [Coding-Chal
 
 These totals are updated automatically when Markdown files are added to `HackerRank_Challenges` or `DataLemur_Challenges`.
 
-## Coding-Challenge-Publisher web app
+## Coding Challenge Publisher web app
 
-[![Coding-Challenge-Publisher interface showing the challenge editor, solution workspace, GitHub destination, and Markdown preview](assets/sql-challenge-publisher.jpg)](https://challenge-publisher.das-reemika.chatgpt.site/)
+<a href="https://challenge-publisher.das-reemika.chatgpt.site/"><img width="669" height="2386" alt="Coding Challenge Publisher interface showing the challenge editor, solution workspace, GitHub destination, and Markdown preview" src="https://github.com/user-attachments/assets/494f5ed9-f326-4c8f-b180-46ed462e5525" /></a>
 
 ## What the web app supports
 
@@ -31,7 +31,7 @@ These totals are updated automatically when Markdown files are added to `HackerR
 
 ## Step-by-step guide
 
-1. Open [Coding-Challenge-Publisher](https://challenge-publisher.das-reemika.chatgpt.site/).
+1. Open [Coding Challenge Publisher](https://challenge-publisher.das-reemika.chatgpt.site/).
 2. Create or choose a GitHub repository where you have permission to commit files.
 3. Under **GitHub destination**, enter:
    - **Repository:** `owner/repository`, such as `your-username/Coding-Challenge-Publisher`.
@@ -48,7 +48,7 @@ These totals are updated automatically when Markdown files are added to `HackerR
 5. Select **SQL** or **Python** at the top of the app.
 6. Select **HackerRank** or **DataLemur** to open the appropriate challenge catalog.
 7. Sign in on the provider's official website, solve a challenge, and copy the individual challenge URL from the browser address bar.
-8. Return to Coding-Challenge-Publisher, paste the URL into **Challenge URL**, and select **Import question**. Catalog pages are not supported.
+8. Return to Coding Challenge Publisher, paste the URL into **Challenge URL**, and select **Import question**. Catalog pages are not supported.
 9. Review the imported challenge number, title, and question.
 10. For each solution:
     - Select **SQL** or **Python**.
