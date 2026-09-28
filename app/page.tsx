@@ -128,7 +128,7 @@ export default function Home() {
     <main className="app-shell">
       <Toaster richColors position="top-right" />
       <header className="topbar">
-        <div className="brand"><div className="brand-mark" aria-hidden="true"><FileCode2 size={25} /></div><h1>Coding-Challenge-<span>Publisher</span></h1></div>
+        <div className="brand"><div className="brand-mark" aria-hidden="true"><FileCode2 size={25} /></div><h1>Coding Challenge <span>Publisher</span></h1></div>
         <div className="header-journey" aria-label="Workflow"><span>Solve</span><b>›</b><span>Document</span><b>›</b><span>Share</span><b>›</b><span>Build your portfolio</span></div>
       </header>
       <section className="mode-strip" aria-label="Challenge type and platform">

@@ -1,8 +1,8 @@
-# Coding-Challenge-Publisher
+# Coding Challenge Publisher
 
-Coding-Challenge-Publisher is a public web application for turning HackerRank and DataLemur challenges into consistent Markdown portfolio entries. Import a public challenge, add one or more SQL or Python solutions, preview the result, and publish it directly to a GitHub repository.
+Coding Challenge Publisher is a public web application for turning HackerRank and DataLemur challenges into consistent Markdown portfolio entries. Import a public challenge, add one or more SQL or Python solutions, preview the result, and publish it directly to a GitHub repository.
 
-**Live application:** [Coding-Challenge-Publisher](https://challenge-publisher.das-reemika.chatgpt.site/)
+**Live application:** [Coding Challenge Publisher](https://challenge-publisher.das-reemika.chatgpt.site/)
 
 ## Features
 
@@ -20,7 +20,7 @@ Coding-Challenge-Publisher is a public web application for turning HackerRank an
 
 ## How to use the application
 
-1. Open [Coding-Challenge-Publisher](https://challenge-publisher.das-reemika.chatgpt.site/).
+1. Open [Coding Challenge Publisher](https://challenge-publisher.das-reemika.chatgpt.site/).
 2. Enter the destination repository as `owner/repository`, its branch, and an optional folder.
 3. Enter a fine-grained GitHub token restricted to that repository with **Contents: read and write** permission.
 4. Select **SQL** or **Python**, then open HackerRank or DataLemur from the platform buttons.
@@ -61,7 +61,7 @@ The application uses server-side API routes to import public challenge text and 
 ## Repository branches
 
 - `main` stores published challenge Markdown files and the portfolio README.
-- `WebApp` stores the Coding-Challenge-Publisher source code.
+- `WebApp` stores the Coding Challenge Publisher source code.
 
 ## Deployment
 
