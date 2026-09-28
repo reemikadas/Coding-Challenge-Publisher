@@ -100,8 +100,8 @@ export default function Home() {
         </div>
         <div className="mode-divider" />
         <div className="platform-buttons">
-          <a className="platform-button" href={platformUrls.HackerRank} target="_blank" rel="noreferrer"><span className="platform-logo hr-logo">H</span><span>HackerRank</span><ExternalLink /></a>
-          <a className="platform-button" href={platformUrls.DataLemur} target="_blank" rel="noreferrer"><span className="platform-logo dl-logo">DL</span><span>DataLemur</span><ExternalLink /></a>
+          <a className="platform-button" href={platformUrls.HackerRank} target="_blank" rel="noreferrer"><span className="platform-logo hackerrank-logo" aria-hidden="true" /><span>HackerRank</span><ExternalLink /></a>
+          <a className="platform-button" href={platformUrls.DataLemur} target="_blank" rel="noreferrer"><span className="platform-logo datalemur-logo" aria-hidden="true" /><span>DataLemur</span><ExternalLink /></a>
         </div>
         <p>Turn coding challenges into a clean notebook and push to GitHub.</p>
       </section>
@@ -128,7 +128,7 @@ export default function Home() {
             <div className="solution-toolbar"><FieldLabel id="solution">{form.language} Solution #</FieldLabel><Select value={form.runtime} onValueChange={(value) => update("runtime", value)}><SelectTrigger aria-label={form.language === "Python" ? "Python runtime" : "SQL dialect"} className="runtime-select"><SelectValue /></SelectTrigger><SelectContent align="end">{form.language === "Python" ? <SelectItem value="Python 3">Python 3</SelectItem> : <><SelectItem value="MySQL">MySQL</SelectItem><SelectItem value="PostgreSQL">PostgreSQL</SelectItem></>}</SelectContent></Select></div>
             <div className="code-editor-wrap"><Textarea id="solution" spellCheck={false} className="code-area" placeholder={form.language === "Python" ? "def solve():\n    pass" : "SELECT …"} value={form.solution} onChange={(event) => update("solution", event.target.value)} /><Button type="button" variant="outline" size="sm" className="copy-button" disabled={!form.solution} onClick={copySolution}><Copy /> Copy</Button></div>
           </div>
-          <div className="editor-actions"><Button variant="outline" disabled={!hasChallengeDraft} onClick={clearChallenge}><RotateCcw /> Clear</Button><Button size="lg" className="publish-button" disabled={!ready || isPublishing} onClick={publish}>{isPublishing ? <><Loader2 className="animate-spin" /> Publishing…</> : <><FileCode2 /> Create &amp; push Markdown <Send /></>}</Button></div>
+          <div className="editor-actions"><Button variant="outline" disabled={!hasChallengeDraft} onClick={clearChallenge}><RotateCcw /> Clear</Button><Button size="lg" className="publish-button" disabled={!ready || isPublishing} onClick={publish}>{isPublishing ? <><Loader2 className="animate-spin" /> Publishing…</> : <><span className="github-mark" aria-hidden="true" /> Create &amp; push Markdown <Send /></>}</Button></div>
           <label className="overwrite-row" htmlFor="overwrite"><Checkbox id="overwrite" checked={form.overwrite} onCheckedChange={(checked) => update("overwrite", checked === true)} />Replace the file if it already exists</label>
           {publishedUrl && <a className="success-link" href={publishedUrl} target="_blank" rel="noreferrer"><CheckCircle2 size={17} /> Open published file</a>}
         </section>

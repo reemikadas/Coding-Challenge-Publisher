@@ -27,9 +27,9 @@ button,input,textarea { font:inherit; }
 .platform-button:hover { transform:translateY(-1px); border-color:#80a4ef; box-shadow:0 7px 18px rgb(33 62 118 / 10%); }
 .platform-button:focus-visible { outline:3px solid rgb(59 104 255 / 28%); outline-offset:2px; }
 .platform-button>svg { width:13px; height:13px; color:#7a8caf; }
-.platform-logo { width:23px; height:23px; display:grid; place-items:center; border-radius:5px; color:#fff; font-size:.62rem; font-weight:900; }
-.hr-logo { background:#28b85c; }
-.dl-logo { background:#7c3aed; }
+.platform-logo { width:23px; height:23px; flex:0 0 auto; border-radius:5px; background-position:center; background-repeat:no-repeat; background-size:contain; }
+.hackerrank-logo { background-image:url("https://hrcdn.net/fcore/assets/favicon-ddc852f75a.png"); }
+.datalemur-logo { background-image:url("https://datalemur.com/favicon.ico"); }
 .mode-strip>p { margin:0 4px 0 auto; color:#7081aa; font-size:.72rem; }
 .repo-strip { margin:0 clamp(16px,2vw,32px) 14px; padding:14px 18px 18px; background:rgb(255 255 255 / 88%); border:1px solid #dce6f5; border-radius:12px; box-shadow:0 8px 30px rgb(41 77 146 / 6%); }
 .repo-heading { display:flex; align-items:flex-start; gap:9px; margin-bottom:12px; color:#3155f5; }
@@ -67,6 +67,7 @@ button,input,textarea { font:inherit; }
 .editor-actions { display:flex; align-items:center; justify-content:space-between; gap:14px; }
 .publish-button { min-width:310px; min-height:48px; border:0; border-radius:9px; background:linear-gradient(110deg,#3e4ff5,#27aef4); box-shadow:0 10px 23px rgb(49 85 245 / 27%); }
 .publish-button:hover { background:linear-gradient(110deg,#3142e8,#199fe7); }
+.github-mark { width:18px; height:18px; background:url("https://github.githubassets.com/favicons/favicon.svg") center/contain no-repeat; filter:brightness(0) invert(1); }
 .overwrite-row { display:flex; align-items:center; gap:8px; margin-top:-8px; color:#68779b; font-size:.7rem; cursor:pointer; }
 .success-link { display:flex; align-items:center; justify-content:center; gap:7px; margin-top:-7px; color:#137647; font-size:.78rem; font-weight:800; text-decoration:none; }
 .preview-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; padding-bottom:11px; border-bottom:1px solid #dce6f5; }
