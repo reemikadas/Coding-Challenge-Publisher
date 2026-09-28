@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Braces, CheckCircle2, Copy, Database, Download, ExternalLink, Eye, FileCode2, GitFork, Link2, Loader2, LockKeyhole, RotateCcw, Send } from "lucide-react";
+import { CheckCircle2, Copy, Database, Download, ExternalLink, Eye, FileCode2, GitFork, Link2, Loader2, LockKeyhole, RotateCcw, Send } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -96,7 +96,7 @@ export default function Home() {
       <section className="mode-strip" aria-label="Challenge type and platform">
         <div className="language-switch" role="group" aria-label="Challenge language">
           <button type="button" className={form.language === "SQL" ? "language-button active" : "language-button"} aria-pressed={form.language === "SQL"} onClick={() => selectLanguage("SQL")}><Database /> SQL</button>
-          <button type="button" className={form.language === "Python" ? "language-button active" : "language-button"} aria-pressed={form.language === "Python"} onClick={() => selectLanguage("Python")}><Braces /> Python</button>
+          <button type="button" className={form.language === "Python" ? "language-button active" : "language-button"} aria-pressed={form.language === "Python"} onClick={() => selectLanguage("Python")}><span className="python-logo" aria-hidden="true" /> Python</button>
         </div>
         <div className="mode-divider" />
         <div className="platform-buttons">
@@ -135,7 +135,7 @@ export default function Home() {
         <aside className="preview-column" aria-labelledby="preview-title">
           <div className="preview-heading"><div><Eye size={21} /><h2 id="preview-title">Markdown preview</h2></div><span className="preview-filename"><FileCode2 />{filename || "No challenge loaded"}</span></div>
           <article className="markdown-preview" aria-label="Generated Markdown preview">
-            {hasChallengeDraft ? <><h3><span>#</span> {form.challengeTitle || `${form.language} Challenge`}</h3><div className="preview-badges"><span>{form.language === "Python" ? <Braces /> : <Database />}{form.runtime}</span>{form.provider && <span>{form.provider}</span>}{form.challengeNumber && <span>Challenge #{form.challengeNumber}</span>}</div><hr /><section><h4>## Challenge</h4><p className="challenge-copy">{form.question || "Your challenge question will appear here."}</p></section>{form.challengeUrl && <p className="source-link"><strong>Source:</strong> {form.challengeUrl}</p>}<section><h4>## {form.language} Solution</h4><pre className="solution-preview"><code>{form.solution || (form.language === "Python" ? "# Your Python solution will appear here." : "-- Your SQL solution will appear here.")}</code></pre></section><p className="runtime-note">{form.language === "Python" ? "Runtime" : "Dialect"}: {form.runtime}</p></> : <div className="empty-preview"><FileCode2 /><h3>Your Markdown will appear here</h3><p>Choose SQL or Python, import a challenge, and add your solution.</p></div>}
+            {hasChallengeDraft ? <><h3><span>#</span> {form.challengeTitle || `${form.language} Challenge`}</h3><div className="preview-badges"><span>{form.language === "Python" ? <span className="python-mini-logo" aria-hidden="true" /> : <Database />}{form.runtime}</span>{form.provider && <span>{form.provider}</span>}{form.challengeNumber && <span>Challenge #{form.challengeNumber}</span>}</div><hr /><section><h4>## Challenge</h4><p className="challenge-copy">{form.question || "Your challenge question will appear here."}</p></section>{form.challengeUrl && <p className="source-link"><strong>Source:</strong> {form.challengeUrl}</p>}<section><h4>## {form.language} Solution</h4><pre className="solution-preview"><code>{form.solution || (form.language === "Python" ? "# Your Python solution will appear here." : "-- Your SQL solution will appear here.")}</code></pre></section><p className="runtime-note">{form.language === "Python" ? "Runtime" : "Dialect"}: {form.runtime}</p></> : <div className="empty-preview"><FileCode2 /><h3>Your Markdown will appear here</h3><p>Choose SQL or Python, import a challenge, and add your solution.</p></div>}
           </article>
           <details className="raw-markdown"><summary>View raw Markdown</summary><pre><code>{markdown}</code></pre></details>
         </aside>
