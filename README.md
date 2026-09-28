@@ -1,8 +1,8 @@
-# SQL Challenge Journal
+# Coding-Challenge-Publisher
 
-SQL Challenge Journal is a reusable way for anyone to organize and store SQL practice solutions on GitHub. Each challenge is saved as an individual Markdown file containing the public HackerRank or DataLemur problem statement, a link to the original challenge, and the user's MySQL solution.
+Coding-Challenge-Publisher is a reusable challenge journal and publishing application for anyone who wants to organize SQL and Python practice solutions on GitHub. Each challenge is stored as an individual Markdown file containing the public problem statement, a link to the original HackerRank or DataLemur challenge, and one or more documented solutions.
 
-This repository demonstrates the output of the [SQL Notebook Publisher](https://sql-challenge-publisher.das-reemika.chatgpt.site/), a public web app that imports HackerRank and DataLemur SQL challenge details, creates a consistent Markdown document, and commits it to a GitHub repository selected by the user. Anyone can use the app with a repository and GitHub token they control.
+This `main` branch demonstrates the Markdown produced by the public [Coding-Challenge-Publisher](https://challenge-publisher.das-reemika.chatgpt.site/). The application source is maintained on the [`WebApp` branch](https://github.com/reemikadas/Coding-Challenge-Publisher/tree/WebApp).
 
 ## Challenges solved
 
@@ -12,39 +12,63 @@ This repository demonstrates the output of the [SQL Notebook Publisher](https://
 | Challenges Solved | 24 | 54 | 78 |
 <!-- challenge-counts:end -->
 
-These totals are updated automatically whenever a Markdown solution is added to either challenge folder.
+These totals are updated automatically when Markdown files are added to `HackerRank_Challenges` or `DataLemur_Challenges`.
 
-## Snap of SQL Notebook Publisher web app
+## Coding-Challenge-Publisher web app
 
-[![Current SQL Notebook Publisher interface showing platform selection, challenge editor, SQL solution, and Markdown preview](assets/sql-challenge-publisher.jpg)](https://sql-challenge-publisher.das-reemika.chatgpt.site/)
+[![Coding-Challenge-Publisher interface showing the challenge editor, solution workspace, GitHub destination, and Markdown preview](assets/sql-challenge-publisher.jpg)](https://challenge-publisher.das-reemika.chatgpt.site/)
 
-## Step-by-step guide to use the web app
+## What the web app supports
 
-1. Open the [SQL Notebook Publisher](https://sql-challenge-publisher.das-reemika.chatgpt.site/).
+- Public HackerRank and DataLemur challenge URLs.
+- SQL solutions using MySQL or PostgreSQL.
+- Python solutions using Python 3.
+- Multiple SQL and Python solutions in one Markdown file.
+- Filenames in `<Challenge #>_<Title>.md` format.
+- Markdown preview before publishing.
+- Direct publishing to a selected GitHub repository, branch, and folder.
+- Loading an existing Markdown file from GitHub for future edits.
+
+## Step-by-step guide
+
+1. Open [Coding-Challenge-Publisher](https://challenge-publisher.das-reemika.chatgpt.site/).
 2. Create or choose a GitHub repository where you have permission to commit files.
-3. In **Repository**, enter the destination in `owner/repository` format—for example, `your-username/sql-challenge-journal`.
-4. In **Branch**, enter an existing branch in that repository. Use `main` unless you intentionally want the files on another branch.
-5. In **Folder**, enter the directory that should contain the Markdown files. The app uses `HackerRank_Challenges` or `DataLemur_Challenges` when the provider defaults are selected. Leave it blank to save files at the repository root.
-6. Create and enter a fine-grained GitHub token:
-   1. Open GitHub's [New fine-grained personal access token](https://github.com/settings/personal-access-tokens/new) page. You can also review GitHub's [personal access token guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
-   2. Enter a descriptive **Token name**, such as `SQL Challenge Publisher`, and choose an expiration date.
-   3. Set **Resource owner** to the account or organization that owns the destination repository. Organization-owned repositories may require an administrator to approve the token.
-   4. Under **Repository access**, select **Only select repositories**, then choose the repository entered in step 3.
-   5. Under **Repository permissions**, find **Contents** and select **Read and write**. No additional repository permissions are required for publishing these Markdown files.
-   6. Select **Generate token**, copy the token immediately, and paste it into the web app's **Fine-grained token** field.
-   7. Keep the token private. The app uses it only for the GitHub request and does not save it. Revoke or rotate it from GitHub settings if it is ever exposed.
-7. Under **01 / COMPOSE**, select the prominent **HackerRank** or **DataLemur** button.
-8. Sign in directly on the selected challenge website, choose and solve a SQL challenge, and copy the individual challenge URL from the browser address bar. Login details are never entered into or shared with SQL Notebook Publisher.
-9. Return to SQL Notebook Publisher and paste the copied link into **Challenge URL**. Do not use a question-catalog page.
+3. Under **GitHub destination**, enter:
+   - **Repository:** `owner/repository`, such as `your-username/Coding-Challenge-Publisher`.
+   - **Branch:** an existing branch, usually `main`.
+   - **Folder:** the directory for the Markdown files. The app suggests provider- and language-specific folders; you can change this value or leave it blank for the repository root.
+4. Create a fine-grained GitHub token:
+   1. Open GitHub's [New fine-grained personal access token](https://github.com/settings/personal-access-tokens/new) page.
+   2. Enter a descriptive token name and choose an expiration date.
+   3. Set **Resource owner** to the account or organization that owns the destination repository.
+   4. Under **Repository access**, select **Only select repositories**, then choose the destination repository.
+   5. Under **Repository permissions**, set **Contents** to **Read and write**. No additional repository permission is required for these Markdown files.
+   6. Select **Generate token**, copy it immediately, and paste it into **Fine-grained token** in the web app.
+   7. Keep the token private. Revoke or rotate it from GitHub settings if it is exposed.
+5. Select **SQL** or **Python** at the top of the app.
+6. Select **HackerRank** or **DataLemur** to open the appropriate challenge catalog.
+7. Sign in on the provider's official website, solve a challenge, and copy the individual challenge URL from the browser address bar.
+8. Return to Coding-Challenge-Publisher, paste the URL into **Challenge URL**, and select **Import question**. Catalog pages are not supported.
+9. Review the imported challenge number, title, and question.
+10. For each solution:
+    - Select **SQL** or **Python**.
+    - Select the SQL dialect or Python runtime.
+    - Paste the accepted code into the solution editor.
+11. To document another approach for the same challenge, select **Add another solution** and repeat the previous step.
+12. Review the generated filename and Markdown preview.
+13. Select **Create & push Markdown**. The app creates a new file unless replacement is explicitly enabled.
+14. Open the published file from the success link, or select **Clear** to start the next challenge while retaining the GitHub destination settings.
 
-10. Select **Import question**. The app detects the provider and imports the public challenge description, ID, and title. DataLemur premium questions are not accessed.
-12. Review the generated Markdown and filename. Files from both platforms follow `<Challenge ID>_<Title>.md`, such as `12889_The_PADS.md` or `31_Page_With_No_Likes.md`.
-13. Select **Create & push Markdown**. If the filename already exists, enable **Replace the file if it already exists** only when you intentionally want to overwrite it.
-14. Open the published file from the success link. Select **Clear challenge** to start the next problem while keeping your GitHub destination settings available.
+## Update an existing challenge file
+
+1. Enter the repository, branch, token, and the complete file path under **Existing Markdown path**—for example, `HackerRank_Challenges/12889_Occupations.md`.
+2. Select **Load from GitHub**.
+3. Edit the challenge text or existing solution, or add another SQL or Python solution.
+4. Review the preview and select **Create & push Markdown**. The loaded file is replaced with the updated Markdown.
 
 ## Supported sources and privacy
 
-- Public HackerRank and DataLemur SQL challenge pages are supported.
+- The importer reads public HackerRank and DataLemur challenge text only.
 - DataLemur premium content is not accessed.
-- SQL Notebook Publisher does not collect HackerRank or DataLemur usernames, passwords, cookies, or login sessions.
-- GitHub tokens are used only for the requested commit and are not saved by the application.
+- The application does not request or store HackerRank or DataLemur usernames, passwords, cookies, or login sessions.
+- GitHub tokens are used only for the requested GitHub operation and are not saved by the application.
