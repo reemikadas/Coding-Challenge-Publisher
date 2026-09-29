@@ -9,7 +9,7 @@ This `main` branch demonstrates the Markdown produced by the public [Coding Chal
 <!-- challenge-counts:start -->
 |  | HackerRank | DataLemur | Total Challenges Solved |
 | --- | ---: | ---: | ---: |
-| Challenges Solved | 25 | 54 | 79 |
+| Challenges Solved | 26 | 54 | 80 |
 <!-- challenge-counts:end -->
 
 These totals are updated automatically when Markdown files are added to `HackerRank_SQL_Challenges` or `DataLemur_SQL_Challenges`.
