@@ -9,10 +9,10 @@ This `main` branch demonstrates the Markdown produced by the public [Coding Chal
 <!-- challenge-counts:start -->
 |  | HackerRank | DataLemur | Total Challenges Solved |
 | --- | ---: | ---: | ---: |
-| Challenges Solved | 24 | 54 | 78 |
+| Challenges Solved | 25 | 54 | 79 |
 <!-- challenge-counts:end -->
 
-These totals are updated automatically when Markdown files are added to `HackerRank_Challenges` or `DataLemur_Challenges`.
+These totals are updated automatically when Markdown files are added to `HackerRank_SQL_Challenges` or `DataLemur_SQL_Challenges`.
 
 ## Coding Challenge Publisher web app
 
@@ -61,7 +61,7 @@ These totals are updated automatically when Markdown files are added to `HackerR
 
 ## Update an existing challenge file
 
-1. Enter the repository, branch, token, and the complete file path under **Existing Markdown path**—for example, `HackerRank_Challenges/12889_Occupations.md`.
+1. Enter the repository, branch, token, and the complete file path under **Existing Markdown path**—for example, `HackerRank_SQL_Challenges/12889_Occupations.md`.
 2. Select **Load from GitHub**.
 3. Edit the challenge text or existing solution, or add another SQL or Python solution.
 4. Review the preview and select **Create & push Markdown**. The loaded file is replaced with the updated Markdown.

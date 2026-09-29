@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - "HackerRank_Challenges/**/*.md"
-      - "DataLemur_Challenges/**/*.md"
+      - "HackerRank_SQL_Challenges/**/*.md"
+      - "DataLemur_SQL_Challenges/**/*.md"
   workflow_dispatch:
 
 permissions:
@@ -28,8 +28,8 @@ jobs:
       - name: Count solutions and update README
         shell: bash
         run: |
-          hacker_rank_count="$(find HackerRank_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
-          data_lemur_count="$(find DataLemur_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
+          hacker_rank_count="$(find HackerRank_SQL_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
+          data_lemur_count="$(find DataLemur_SQL_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
           python3 - "$hacker_rank_count" "$data_lemur_count" <<'PY'
           from pathlib import Path
           import re
