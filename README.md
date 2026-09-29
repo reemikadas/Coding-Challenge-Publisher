@@ -34,7 +34,7 @@ Coding Challenge Publisher is a public web application for turning HackerRank an
 
 ## Update an existing Markdown file
 
-1. Enter the repository, branch, fine-grained token, and the complete file path—for example, `HackerRank_Challenges/12889_Occupations.md`.
+1. Enter the repository, branch, fine-grained token, and the complete file path—for example, `HackerRank_SQL_Challenges/12889_Occupations.md`.
 2. Select **Load from GitHub**.
 3. Edit the challenge or its solutions. You can also add another SQL or Python solution.
 4. Review the preview and select **Create & push Markdown**. Replacement is enabled automatically for the loaded file.

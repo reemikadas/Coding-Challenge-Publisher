@@ -14,12 +14,12 @@ type ChallengeProvider = "" | "HackerRank" | "DataLemur";
 type ChallengeLanguage = "SQL" | "Python";
 type SolutionState = { id: number; language: ChallengeLanguage; runtime: string; code: string };
 type FormState = { provider: ChallengeProvider; challengeNumber: string; challengeTitle: string; challengeUrl: string; question: string; solutions: SolutionState[]; repository: string; branch: string; directory: string; token: string; overwrite: boolean };
-const DEFAULT_FOLDERS = ["HackerRank_Challenges", "DataLemur_Challenges", "HackerRank_Python_Challenges", "DataLemur_Python_Challenges"];
-const initialForm: FormState = { provider: "", challengeNumber: "", challengeTitle: "", challengeUrl: "", question: "", solutions: [{ id: 1, language: "SQL", runtime: "MySQL", code: "" }], repository: "", branch: "main", directory: "HackerRank_Challenges", token: "", overwrite: false };
+const DEFAULT_FOLDERS = ["HackerRank_SQL_Challenges", "DataLemur_SQL_Challenges", "HackerRank_Python_Challenges", "DataLemur_Python_Challenges"];
+const initialForm: FormState = { provider: "", challengeNumber: "", challengeTitle: "", challengeUrl: "", question: "", solutions: [{ id: 1, language: "SQL", runtime: "MySQL", code: "" }], repository: "", branch: "main", directory: "HackerRank_SQL_Challenges", token: "", overwrite: false };
 
 function filenamePart(value: string) { return value.trim().replace(/[’']/g, "").replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_+|_+$/g, ""); }
 function filenameFor(challengeNumber: string, challengeTitle: string) { const number = filenamePart(challengeNumber); const title = filenamePart(challengeTitle); return number && title ? `${number}_${title}.md` : ""; }
-function defaultFolder(provider: ChallengeProvider, language: ChallengeLanguage) { const platform = provider === "DataLemur" ? "DataLemur" : "HackerRank"; return language === "Python" ? `${platform}_Python_Challenges` : `${platform}_Challenges`; }
+function defaultFolder(provider: ChallengeProvider, language: ChallengeLanguage) { const platform = provider === "DataLemur" ? "DataLemur" : "HackerRank"; return language === "Python" ? `${platform}_Python_Challenges` : `${platform}_SQL_Challenges`; }
 function markdownFor(form: FormState) {
   const primaryLanguage = form.solutions[0]?.language || "SQL";
   const providerPrefix = form.provider === "DataLemur" ? "DataLemur " : "";
@@ -152,7 +152,7 @@ export default function Home() {
           <div><FieldLabel id="token">Fine-grained token</FieldLabel><Input id="token" type="password" autoComplete="off" placeholder="github_pat_…" value={form.token} onChange={(event) => update("token", event.target.value)} /><p className="field-help">Requires Contents: read and write.</p></div>
         </div>
         <div className="existing-file-row">
-          <div><FieldLabel id="existing-path" optional>Existing Markdown path</FieldLabel><Input id="existing-path" placeholder="HackerRank_Challenges/12889_Occupations.md" value={existingPath} onChange={(event) => { setExistingPath(event.target.value); setExistingFilename(""); }} /></div>
+          <div><FieldLabel id="existing-path" optional>Existing Markdown path</FieldLabel><Input id="existing-path" placeholder="HackerRank_SQL_Challenges/12889_Occupations.md" value={existingPath} onChange={(event) => { setExistingPath(event.target.value); setExistingFilename(""); }} /></div>
           <Button type="button" variant="outline" disabled={!form.repository.trim() || !form.branch.trim() || !form.token.trim() || !existingPath.trim() || isLoadingExisting} onClick={loadExistingMarkdown}>{isLoadingExisting ? <><Loader2 className="animate-spin" /> Loading…</> : <><Download /> Load from GitHub</>}</Button>
         </div>
       </section>
