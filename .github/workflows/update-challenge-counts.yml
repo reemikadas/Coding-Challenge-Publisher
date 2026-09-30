@@ -7,6 +7,8 @@ on:
     paths:
       - "HackerRank_SQL_Challenges/**/*.md"
       - "DataLemur_SQL_Challenges/**/*.md"
+      - "HackerRank_Python_Challenges/**/*.md"
+      - "DataLemur_Python_Challenges/**/*.md"
   workflow_dispatch:
 
 permissions:
@@ -28,20 +30,32 @@ jobs:
       - name: Count solutions and update README
         shell: bash
         run: |
-          hacker_rank_count="$(find HackerRank_SQL_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
-          data_lemur_count="$(find DataLemur_SQL_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
-          python3 - "$hacker_rank_count" "$data_lemur_count" <<'PY'
+          hacker_rank_sql_count="$(find HackerRank_SQL_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
+          data_lemur_sql_count="$(find DataLemur_SQL_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
+          hacker_rank_python_count="$(find HackerRank_Python_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
+          data_lemur_python_count="$(find DataLemur_Python_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
+          python3 - "$hacker_rank_sql_count" "$data_lemur_sql_count" "$hacker_rank_python_count" "$data_lemur_python_count" <<'PY'
           from pathlib import Path
           import re
           import sys
 
           readme = Path("README.md")
           content = readme.read_text()
-          total_count = int(sys.argv[1]) + int(sys.argv[2])
+          hacker_rank_sql = int(sys.argv[1])
+          data_lemur_sql = int(sys.argv[2])
+          hacker_rank_python = int(sys.argv[3])
+          data_lemur_python = int(sys.argv[4])
+          sql_total = hacker_rank_sql + data_lemur_sql
+          python_total = hacker_rank_python + data_lemur_python
+          hacker_rank_total = hacker_rank_sql + hacker_rank_python
+          data_lemur_total = data_lemur_sql + data_lemur_python
+          grand_total = sql_total + python_total
           replacement = f"""<!-- challenge-counts:start -->
           |  | HackerRank | DataLemur | Total Challenges Solved |
           | --- | ---: | ---: | ---: |
-          | Challenges Solved | {sys.argv[1]} | {sys.argv[2]} | {total_count} |
+          | SQL | {hacker_rank_sql} | {data_lemur_sql} | {sql_total} |
+          | Python | {hacker_rank_python} | {data_lemur_python} | {python_total} |
+          | **Total** | **{hacker_rank_total}** | **{data_lemur_total}** | **{grand_total}** |
           <!-- challenge-counts:end -->"""
           updated, replacements = re.subn(
               r"<!-- challenge-counts:start -->.*?<!-- challenge-counts:end -->",
