@@ -30,10 +30,18 @@ jobs:
       - name: Count solutions and update README
         shell: bash
         run: |
-          hacker_rank_sql_count="$(find HackerRank_SQL_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
-          data_lemur_sql_count="$(find DataLemur_SQL_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
-          hacker_rank_python_count="$(find HackerRank_Python_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
-          data_lemur_python_count="$(find DataLemur_Python_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
+          count_markdown_files() {
+            if [[ -d "$1" ]]; then
+              find "$1" -maxdepth 1 -type f -name '*.md' | wc -l | xargs
+            else
+              echo 0
+            fi
+          }
+
+          hacker_rank_sql_count="$(count_markdown_files HackerRank_SQL_Challenges)"
+          data_lemur_sql_count="$(count_markdown_files DataLemur_SQL_Challenges)"
+          hacker_rank_python_count="$(count_markdown_files HackerRank_Python_Challenges)"
+          data_lemur_python_count="$(count_markdown_files DataLemur_Python_Challenges)"
           python3 - "$hacker_rank_sql_count" "$data_lemur_sql_count" "$hacker_rank_python_count" "$data_lemur_python_count" <<'PY'
           from pathlib import Path
           import re
