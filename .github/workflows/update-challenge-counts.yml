@@ -9,6 +9,8 @@ on:
       - "DataLemur_SQL_Challenges/**/*.md"
       - "HackerRank_Python_Challenges/**/*.md"
       - "DataLemur_Python_Challenges/**/*.md"
+      - "LeetCode_SQL_Challenges/**/*.md"
+      - "LeetCode_Python_Challenges/**/*.md"
   workflow_dispatch:
 
 permissions:
@@ -42,7 +44,9 @@ jobs:
           data_lemur_sql_count="$(count_markdown_files DataLemur_SQL_Challenges)"
           hacker_rank_python_count="$(count_markdown_files HackerRank_Python_Challenges)"
           data_lemur_python_count="$(count_markdown_files DataLemur_Python_Challenges)"
-          python3 - "$hacker_rank_sql_count" "$data_lemur_sql_count" "$hacker_rank_python_count" "$data_lemur_python_count" <<'PY'
+          leetcode_sql_count="$(count_markdown_files LeetCode_SQL_Challenges)"
+          leetcode_python_count="$(count_markdown_files LeetCode_Python_Challenges)"
+          python3 - "$hacker_rank_sql_count" "$data_lemur_sql_count" "$hacker_rank_python_count" "$data_lemur_python_count" "$leetcode_sql_count" "$leetcode_python_count" <<'PY'
           from pathlib import Path
           import re
           import sys
@@ -53,17 +57,20 @@ jobs:
           data_lemur_sql = int(sys.argv[2])
           hacker_rank_python = int(sys.argv[3])
           data_lemur_python = int(sys.argv[4])
-          sql_total = hacker_rank_sql + data_lemur_sql
-          python_total = hacker_rank_python + data_lemur_python
+          leetcode_sql = int(sys.argv[5])
+          leetcode_python = int(sys.argv[6])
+          sql_total = hacker_rank_sql + data_lemur_sql + leetcode_sql
+          python_total = hacker_rank_python + data_lemur_python + leetcode_python
           hacker_rank_total = hacker_rank_sql + hacker_rank_python
           data_lemur_total = data_lemur_sql + data_lemur_python
+          leetcode_total = leetcode_sql + leetcode_python
           grand_total = sql_total + python_total
           replacement = f"""<!-- challenge-counts:start -->
-          |  | HackerRank | DataLemur | Total Challenges Solved |
-          | --- | ---: | ---: | ---: |
-          | SQL | {hacker_rank_sql} | {data_lemur_sql} | {sql_total} |
-          | Python | {hacker_rank_python} | {data_lemur_python} | {python_total} |
-          | **Total** | **{hacker_rank_total}** | **{data_lemur_total}** | **{grand_total}** |
+          |  | HackerRank | DataLemur | LeetCode | Total Challenges Solved |
+          | --- | ---: | ---: | ---: | ---: |
+          | SQL | {hacker_rank_sql} | {data_lemur_sql} | {leetcode_sql} | {sql_total} |
+          | Python | {hacker_rank_python} | {data_lemur_python} | {leetcode_python} | {python_total} |
+          | **Total** | **{hacker_rank_total}** | **{data_lemur_total}** | **{leetcode_total}** | **{grand_total}** |
           <!-- challenge-counts:end -->"""
           updated, replacements = re.subn(
               r"<!-- challenge-counts:start -->.*?<!-- challenge-counts:end -->",
