@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, Copy, Database, Download, ExternalLink, Eye, FileCode2, GitFork, Link2, Loader2, LockKeyhole, Plus, RotateCcw, Send, Trash2 } from "lucide-react";
+import { CheckCircle2, Copy, Database, Download, Eye, FileCode2, GitFork, Link2, Loader2, LockKeyhole, Plus, RotateCcw, Send, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -140,9 +140,9 @@ export default function Home() {
         </div>
         <div className="mode-divider" />
         <div className="platform-buttons">
-          <a className="platform-button" href={platformUrls.HackerRank} target="_blank" rel="noreferrer"><span className="platform-logo hackerrank-logo" aria-hidden="true" /><span>HackerRank</span><ExternalLink /></a>
-          <a className="platform-button" href={platformUrls.DataLemur} target="_blank" rel="noreferrer"><span className="platform-logo datalemur-logo" aria-hidden="true" /><span>DataLemur</span><ExternalLink /></a>
-          <a className="platform-button" href={platformUrls.LeetCode} target="_blank" rel="noreferrer"><span className="platform-logo leetcode-logo" aria-hidden="true" /><span>LeetCode</span><ExternalLink /></a>
+          <a className="platform-button" href={platformUrls.HackerRank} target="_blank" rel="noreferrer" aria-label="Open HackerRank" data-tooltip="HackerRank"><span className="platform-logo hackerrank-logo" aria-hidden="true" /></a>
+          <a className="platform-button" href={platformUrls.DataLemur} target="_blank" rel="noreferrer" aria-label="Open DataLemur" data-tooltip="DataLemur"><span className="platform-logo datalemur-logo" aria-hidden="true" /></a>
+          <a className="platform-button" href={platformUrls.LeetCode} target="_blank" rel="noreferrer" aria-label="Open LeetCode" data-tooltip="LeetCode"><span className="platform-logo leetcode-logo" aria-hidden="true" /></a>
         </div>
         <p>Turn coding challenges into a clean notebook and push to GitHub.</p>
       </section>
