@@ -56,6 +56,8 @@ In 2015-01-04, the temperature was higher than the previous day (20 -> 30).
 WITH temp_comparison AS (
     SELECT
         id,
+        recordDate AS current_day,
+        LAG(recordDate) OVER(ORDER BY recordDate) AS previous_day,
         temperature AS current_day_temperature,
         LAG(temperature) OVER(ORDER BY recordDate) AS previous_day_temperature
     FROM weather
@@ -63,7 +65,8 @@ WITH temp_comparison AS (
 SELECT
     id
 FROM temp_comparison
-WHERE current_day_temperature > previous_day_temperature
+WHERE DATEDIFF(current_day, previous_day) = 1
+AND current_day_temperature > previous_day_temperature
 ;
 ~~~
 
