@@ -1,6 +1,9 @@
-# Coding Challenge Publisher
+<h1 align="left">
+  <img src="assets/coding-challenge-publisher-logo.png" alt="Coding Challenge Publisher logo" width="44" align="center" />
+  Coding Challenge Publisher
+</h1>
 
-Coding Challenge Publisher is a reusable challenge journal and publishing application for anyone who wants to organize SQL and Python practice solutions on GitHub. Each challenge is stored as an individual Markdown file containing the public problem statement, a link to the original HackerRank or DataLemur challenge, and one or more documented solutions.
+Coding Challenge Publisher is a reusable challenge journal and publishing application for anyone who wants to organize SQL and Python practice solutions on GitHub. Each challenge is stored as an individual Markdown file containing the public problem statement, a link to the original HackerRank, DataLemur, or LeetCode challenge, and one or more documented solutions.
 
 This `main` branch demonstrates the Markdown produced by the public [Coding Challenge Publisher](https://challenge-publisher.das-reemika.chatgpt.site/). The application source is maintained on the [`WebApp` branch](https://github.com/reemikadas/Coding-Challenge-Publisher/tree/WebApp).
 
@@ -22,7 +25,7 @@ These totals are updated automatically when Markdown files are added to the Hack
 
 ## What the web app supports
 
-- Public HackerRank and DataLemur challenge URLs.
+- Public HackerRank, DataLemur, and LeetCode challenge URLs.
 - SQL solutions using MySQL or PostgreSQL.
 - Python solutions using Python 3.
 - Multiple SQL and Python solutions in one Markdown file.
@@ -48,7 +51,7 @@ These totals are updated automatically when Markdown files are added to the Hack
    6. Select **Generate token**, copy it immediately, and paste it into **Fine-grained token** in the web app.
    7. Keep the token private. Revoke or rotate it from GitHub settings if it is exposed.
 5. Select **SQL** or **Python** at the top of the app.
-6. Select **HackerRank** or **DataLemur** to open the appropriate challenge catalog.
+6. Select the HackerRank, DataLemur, or LeetCode logo to open the appropriate challenge catalog. Hover over a logo to see the platform name.
 7. Sign in on the provider's official website, solve a challenge, and copy the individual challenge URL from the browser address bar.
 8. Return to Coding Challenge Publisher, paste the URL into **Challenge URL**, and select **Import question**. Catalog pages are not supported.
 9. Review the imported challenge number, title, and question.
@@ -70,7 +73,6 @@ These totals are updated automatically when Markdown files are added to the Hack
 
 ## Supported sources and privacy
 
-- The importer reads public HackerRank and DataLemur challenge text only.
-- DataLemur premium content is not accessed.
-- The application does not request or store HackerRank or DataLemur usernames, passwords, cookies, or login sessions.
+- The importer reads challenge details from supported HackerRank, DataLemur, and LeetCode URLs.
+- The application does not request or store HackerRank, DataLemur, or LeetCode usernames, passwords, cookies, or login sessions.
 - GitHub tokens are used only for the requested GitHub operation and are not saved by the application.
