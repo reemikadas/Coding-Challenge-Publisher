@@ -20,7 +20,7 @@ function decodeBase64(value: string) {
 function parseMarkdown(markdown: string, filePath: string) {
   const filename = filePath.split("/").at(-1) || "";
   const directory = filePath.includes("/") ? filePath.split("/").slice(0, -1).join("/") : "";
-  const heading = markdown.match(/^#\s+(?:DataLemur\s+)?Challenge\s+([^:\n]+):\s*(.+)$/m);
+  const heading = markdown.match(/^#\s+(?:(?:DataLemur|LeetCode)\s+)?Challenge\s+([^:\n]+):\s*(.+)$/m);
   const filenameParts = filename.replace(/\.md$/i, "").split("_");
   const challengeNumber = heading?.[1]?.trim() || filenameParts.shift() || "";
   const title = heading?.[2]?.trim() || filenameParts.join(" ");
@@ -48,7 +48,13 @@ function parseMarkdown(markdown: string, filePath: string) {
   return {
     filename,
     directory,
-    provider: source.includes("datalemur.com") || directory.includes("DataLemur") ? "DataLemur" : source.includes("hackerrank.com") || directory.includes("HackerRank") ? "HackerRank" : "",
+    provider: source.includes("leetcode.com") || directory.includes("LeetCode")
+      ? "LeetCode"
+      : source.includes("datalemur.com") || directory.includes("DataLemur")
+        ? "DataLemur"
+        : source.includes("hackerrank.com") || directory.includes("HackerRank")
+          ? "HackerRank"
+          : "",
     challengeNumber,
     title,
     challengeUrl: source,

@@ -10,19 +10,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster } from "@/components/ui/sonner";
 
-type ChallengeProvider = "" | "HackerRank" | "DataLemur";
+type ChallengeProvider = "" | "HackerRank" | "DataLemur" | "LeetCode";
 type ChallengeLanguage = "SQL" | "Python";
 type SolutionState = { id: number; language: ChallengeLanguage; runtime: string; code: string };
 type FormState = { provider: ChallengeProvider; challengeNumber: string; challengeTitle: string; challengeUrl: string; question: string; solutions: SolutionState[]; repository: string; branch: string; directory: string; token: string; overwrite: boolean };
-const DEFAULT_FOLDERS = ["HackerRank_SQL_Challenges", "DataLemur_SQL_Challenges", "HackerRank_Python_Challenges", "DataLemur_Python_Challenges"];
+const DEFAULT_FOLDERS = ["HackerRank_SQL_Challenges", "DataLemur_SQL_Challenges", "LeetCode_SQL_Challenges", "HackerRank_Python_Challenges", "DataLemur_Python_Challenges", "LeetCode_Python_Challenges"];
 const initialForm: FormState = { provider: "", challengeNumber: "", challengeTitle: "", challengeUrl: "", question: "", solutions: [{ id: 1, language: "SQL", runtime: "MySQL", code: "" }], repository: "", branch: "main", directory: "HackerRank_SQL_Challenges", token: "", overwrite: false };
 
 function filenamePart(value: string) { return value.trim().replace(/[’']/g, "").replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_+|_+$/g, ""); }
 function filenameFor(challengeNumber: string, challengeTitle: string) { const number = filenamePart(challengeNumber); const title = filenamePart(challengeTitle); return number && title ? `${number}_${title}.md` : ""; }
-function defaultFolder(provider: ChallengeProvider, language: ChallengeLanguage) { const platform = provider === "DataLemur" ? "DataLemur" : "HackerRank"; return language === "Python" ? `${platform}_Python_Challenges` : `${platform}_SQL_Challenges`; }
+function defaultFolder(provider: ChallengeProvider, language: ChallengeLanguage) { const platform = provider || "HackerRank"; return language === "Python" ? `${platform}_Python_Challenges` : `${platform}_SQL_Challenges`; }
 function markdownFor(form: FormState) {
   const primaryLanguage = form.solutions[0]?.language || "SQL";
-  const providerPrefix = form.provider === "DataLemur" ? "DataLemur " : "";
+  const providerPrefix = form.provider === "DataLemur" || form.provider === "LeetCode" ? `${form.provider} ` : "";
   const heading = [form.challengeNumber && `${providerPrefix}Challenge ${form.challengeNumber}`, form.challengeTitle].filter(Boolean).join(": ") || `${primaryLanguage} Challenge`;
   const source = form.challengeUrl ? `\n**Source:** [View challenge](${form.challengeUrl})\n` : "";
   const solutionSections = form.solutions.map((solution, index) => {
@@ -49,7 +49,9 @@ export default function Home() {
   const hasChallengeDraft = Boolean(form.challengeNumber.trim() || form.challengeTitle.trim() || form.challengeUrl.trim() || form.question.trim() || form.solutions.some((solution) => solution.code.trim()));
   const markdown = useMemo(() => hasChallengeDraft ? markdownFor(form) : "", [form, hasChallengeDraft]);
   const filename = existingFilename || filenameFor(form.challengeNumber, form.challengeTitle);
-  const platformUrls = primarySolution.language === "Python" ? { HackerRank: "https://www.hackerrank.com/domains/python", DataLemur: "https://datalemur.com/questions?category=Python" } : { HackerRank: "https://www.hackerrank.com/domains/sql", DataLemur: "https://datalemur.com/questions?category=SQL" };
+  const platformUrls = primarySolution.language === "Python"
+    ? { HackerRank: "https://www.hackerrank.com/domains/python", DataLemur: "https://datalemur.com/questions?category=Python", LeetCode: "https://leetcode.com/problemset/" }
+    : { HackerRank: "https://www.hackerrank.com/domains/sql", DataLemur: "https://datalemur.com/questions?category=SQL", LeetCode: "https://leetcode.com/problemset/database/" };
 
   useEffect(() => {
     const modelContext = (document as Document & { modelContext?: { registerTool?: (tool: unknown, options?: { signal?: AbortSignal }) => void | Promise<void> } }).modelContext;
@@ -57,13 +59,13 @@ export default function Home() {
     const lifecycle = new AbortController();
     const tool = {
       name: "stage_coding_challenge", title: "Stage coding challenge", description: "Fill the visible SQL or Python challenge editor so the user can review the generated Markdown before publishing.",
-      inputSchema: { type: "object", properties: { challengeNumber: { type: "string" }, challengeTitle: { type: "string" }, challengeUrl: { type: "string" }, provider: { type: "string", enum: ["HackerRank", "DataLemur"] }, language: { type: "string", enum: ["SQL", "Python"] }, question: { type: "string" }, solution: { type: "string" }, runtime: { type: "string" } }, required: ["challengeNumber", "challengeTitle", "language", "question", "solution"], additionalProperties: false },
+      inputSchema: { type: "object", properties: { challengeNumber: { type: "string" }, challengeTitle: { type: "string" }, challengeUrl: { type: "string" }, provider: { type: "string", enum: ["HackerRank", "DataLemur", "LeetCode"] }, language: { type: "string", enum: ["SQL", "Python"] }, question: { type: "string" }, solution: { type: "string" }, runtime: { type: "string" } }, required: ["challengeNumber", "challengeTitle", "language", "question", "solution"], additionalProperties: false },
       annotations: { readOnlyHint: false, untrustedContentHint: true },
       execute(input: unknown) {
         if (!input || typeof input !== "object") throw new Error("Challenge details are required.");
         const values = input as Record<string, unknown>;
         for (const key of ["challengeNumber", "challengeTitle", "language", "question", "solution"]) if (typeof values[key] !== "string" || !values[key]) throw new Error(`${key} is required.`);
-        const provider = values.provider === "DataLemur" || values.provider === "HackerRank" ? values.provider : "";
+        const provider = values.provider === "DataLemur" || values.provider === "HackerRank" || values.provider === "LeetCode" ? values.provider : "";
         const language: ChallengeLanguage = values.language === "Python" ? "Python" : "SQL";
         setForm((current) => ({ ...current, provider, challengeNumber: values.challengeNumber as string, challengeTitle: values.challengeTitle as string, challengeUrl: typeof values.challengeUrl === "string" ? values.challengeUrl : "", question: values.question as string, solutions: [{ id: 1, language, code: values.solution as string, runtime: typeof values.runtime === "string" && values.runtime ? values.runtime : language === "Python" ? "Python 3" : "MySQL" }], directory: defaultFolder(provider, language) }));
         setPublishedUrl(null);
@@ -128,7 +130,7 @@ export default function Home() {
     <main className="app-shell">
       <Toaster richColors position="top-right" />
       <header className="topbar">
-        <div className="brand"><div className="brand-mark" aria-hidden="true"><FileCode2 size={25} /></div><h1>Coding Challenge <span>Publisher</span></h1></div>
+        <div className="brand"><div className="brand-mark" aria-hidden="true" /><h1>Coding Challenge <span>Publisher</span></h1></div>
         <div className="header-journey" aria-label="Workflow"><span>Solve</span><b>›</b><span>Document</span><b>›</b><span>Share</span><b>›</b><span>Build your portfolio</span></div>
       </header>
       <section className="mode-strip" aria-label="Challenge type and platform">
@@ -140,6 +142,7 @@ export default function Home() {
         <div className="platform-buttons">
           <a className="platform-button" href={platformUrls.HackerRank} target="_blank" rel="noreferrer"><span className="platform-logo hackerrank-logo" aria-hidden="true" /><span>HackerRank</span><ExternalLink /></a>
           <a className="platform-button" href={platformUrls.DataLemur} target="_blank" rel="noreferrer"><span className="platform-logo datalemur-logo" aria-hidden="true" /><span>DataLemur</span><ExternalLink /></a>
+          <a className="platform-button" href={platformUrls.LeetCode} target="_blank" rel="noreferrer"><span className="platform-logo leetcode-logo" aria-hidden="true" /><span>LeetCode</span><ExternalLink /></a>
         </div>
         <p>Turn coding challenges into a clean notebook and push to GitHub.</p>
       </section>
@@ -161,8 +164,8 @@ export default function Home() {
           <div className="section-heading"><div><p className="step-label">01 / Compose</p><h2 id="editor-title">Challenge + solutions</h2></div></div>
           <div>
             <FieldLabel id="challenge-url">Challenge URL</FieldLabel>
-            <div className="import-row"><div className="url-input-wrap"><Link2 aria-hidden="true" /><Input id="challenge-url" type="url" placeholder="Paste a HackerRank or DataLemur question link" value={form.challengeUrl} onChange={(event) => update("challengeUrl", event.target.value)} /></div><Button variant="outline" className="import-button" disabled={!form.challengeUrl.trim() || isImporting} onClick={importChallenge}>{isImporting ? <><Loader2 className="animate-spin" /> Importing…</> : <><Download /> Import question</>}</Button></div>
-            <p className={imported ? "import-note imported" : "import-note"}>{imported ? `${form.provider || "Challenge"} question imported. Add one or more accepted solutions below.` : `Imports public HackerRank and DataLemur questions. Premium content is not accessed.`}</p>
+            <div className="import-row"><div className="url-input-wrap"><Link2 aria-hidden="true" /><Input id="challenge-url" type="url" placeholder="Paste a HackerRank, DataLemur, or LeetCode question link" value={form.challengeUrl} onChange={(event) => update("challengeUrl", event.target.value)} /></div><Button variant="outline" className="import-button" disabled={!form.challengeUrl.trim() || isImporting} onClick={importChallenge}>{isImporting ? <><Loader2 className="animate-spin" /> Importing…</> : <><Download /> Import question</>}</Button></div>
+            <p className={imported ? "import-note imported" : "import-note"}>{imported ? `${form.provider || "Challenge"} question imported. Add one or more accepted solutions below.` : `Imports publicly accessible challenge details from supported platforms.`}</p>
           </div>
           <div className="title-grid"><div><FieldLabel id="challenge-number">Challenge #</FieldLabel><Input id="challenge-number" placeholder="1" value={form.challengeNumber} onChange={(event) => update("challengeNumber", event.target.value)} /></div><div><FieldLabel id="challenge-title">Title</FieldLabel><Input id="challenge-title" placeholder={primarySolution.language === "Python" ? "Arrays: Left Rotation" : "Occupations"} value={form.challengeTitle} onChange={(event) => update("challengeTitle", event.target.value)} /></div></div>
           <div className="editor-block"><div className="editor-label-row"><FieldLabel id="question">Challenge question</FieldLabel><span>{form.question.length.toLocaleString()} chars</span></div><Textarea id="question" className="question-area" placeholder="Paste the challenge description here…" value={form.question} onChange={(event) => update("question", event.target.value)} /></div>

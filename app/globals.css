@@ -10,7 +10,7 @@ button,input,textarea { font:inherit; }
 .app-shell { min-height:100vh; padding-bottom:28px; }
 .topbar { min-height:72px; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:14px clamp(20px,3vw,48px); background:rgb(255 255 255 / 82%); border-bottom:1px solid #dbe6f6; backdrop-filter:blur(14px); }
 .brand { display:flex; align-items:center; gap:12px; }
-.brand-mark { display:grid; place-items:center; color:#3155f5; }
+.brand-mark { width:34px; height:34px; flex:0 0 auto; background:url("/brand/coding-challenge-publisher.png") center/contain no-repeat; }
 .brand h1 { margin:0; color:#0f1849; font-size:clamp(1.08rem,2vw,1.55rem); font-weight:800; letter-spacing:-.04em; }
 .brand h1 span { color:#2caaf7; }
 .header-journey { display:flex; align-items:center; gap:12px; color:#61719d; font-size:.75rem; }
@@ -31,6 +31,7 @@ button,input,textarea { font:inherit; }
 .platform-logo { width:23px; height:23px; flex:0 0 auto; border-radius:5px; background-position:center; background-repeat:no-repeat; background-size:contain; }
 .hackerrank-logo { background-image:url("https://hrcdn.net/fcore/assets/favicon-ddc852f75a.png"); }
 .datalemur-logo { background-image:url("https://datalemur.com/favicon.ico"); }
+.leetcode-logo { background-image:url("https://leetcode.com/favicon.ico"); }
 .mode-strip>p { margin:0 4px 0 auto; color:#7081aa; font-size:.72rem; }
 .repo-strip { margin:0 clamp(16px,2vw,32px) 14px; padding:14px 18px 18px; background:rgb(255 255 255 / 88%); border:1px solid #dce6f5; border-radius:12px; box-shadow:0 8px 30px rgb(41 77 146 / 6%); }
 .repo-heading { display:flex; align-items:flex-start; gap:9px; margin-bottom:12px; color:#3155f5; }
@@ -106,6 +107,6 @@ button,input,textarea { font:inherit; }
 .raw-markdown summary { cursor:pointer; font-weight:700; }
 .raw-markdown pre { max-height:260px; padding:12px; overflow:auto; color:#dce8ff; background:#151e31; border-radius:8px; white-space:pre-wrap; }
 @media (max-width:1100px) { .mode-strip>p{display:none}.repo-grid{grid-template-columns:1fr 1fr}.workspace{grid-template-columns:1fr}.markdown-preview{min-height:480px}.preview-column{align-self:stretch} }
-@media (max-width:760px) { .header-journey{display:none}.mode-strip{align-items:stretch;flex-wrap:wrap}.language-switch{min-width:0;flex:1 1 300px}.mode-divider{display:none}.platform-buttons{flex:1 1 260px}.platform-button{flex:1;justify-content:center}.import-row,.existing-file-row{grid-template-columns:1fr}.import-button,.existing-file-row button{width:100%}.repo-heading{flex-wrap:wrap}.privacy-note{width:100%;margin:0}.editor-actions{align-items:stretch;flex-direction:column-reverse}.editor-actions button{width:100%}.publish-button{min-width:0} }
+@media (max-width:760px) { .header-journey{display:none}.mode-strip{align-items:stretch;flex-wrap:wrap}.language-switch{min-width:0;flex:1 1 300px}.mode-divider{display:none}.platform-buttons{flex:1 1 420px}.platform-button{flex:1;justify-content:center}.import-row,.existing-file-row{grid-template-columns:1fr}.import-button,.existing-file-row button{width:100%}.repo-heading{flex-wrap:wrap}.privacy-note{width:100%;margin:0}.editor-actions{align-items:stretch;flex-direction:column-reverse}.editor-actions button{width:100%}.publish-button{min-width:0} }
 @media (max-width:560px) { .topbar{padding:13px 18px}.brand h1{font-size:1rem}.mode-strip,.repo-strip,.workspace{margin-left:10px;margin-right:10px}.repo-grid,.title-grid{grid-template-columns:1fr}.platform-buttons{align-items:stretch;flex-direction:column}.editor-column,.preview-column{padding:17px}.preview-heading,.solution-toolbar{align-items:flex-start;flex-direction:column}.solution-selectors{width:100%;flex-wrap:wrap}.language-select,.runtime-select{flex:1;min-width:110px}.preview-filename{max-width:100%} }
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important} }

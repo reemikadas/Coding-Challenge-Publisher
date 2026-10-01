@@ -1,12 +1,12 @@
 # Coding Challenge Publisher
 
-Coding Challenge Publisher is a public web application for turning HackerRank and DataLemur challenges into consistent Markdown portfolio entries. Import a public challenge, add one or more SQL or Python solutions, preview the result, and publish it directly to a GitHub repository.
+Coding Challenge Publisher is a public web application for turning HackerRank, DataLemur, and LeetCode challenges into consistent Markdown portfolio entries. Import a publicly accessible challenge, add one or more SQL or Python solutions, preview the result, and publish it directly to a GitHub repository.
 
 **Live application:** [Coding Challenge Publisher](https://challenge-publisher.das-reemika.chatgpt.site/)
 
 ## Features
 
-- Import public HackerRank and DataLemur challenge descriptions from an individual challenge URL.
+- Import publicly accessible HackerRank, DataLemur, and LeetCode challenge descriptions from an individual challenge URL.
 - Document SQL solutions using MySQL or PostgreSQL.
 - Document Python solutions using Python 3.
 - Add multiple SQL and Python solutions to the same challenge file.
@@ -23,7 +23,7 @@ Coding Challenge Publisher is a public web application for turning HackerRank an
 1. Open [Coding Challenge Publisher](https://challenge-publisher.das-reemika.chatgpt.site/).
 2. Enter the destination repository as `owner/repository`, its branch, and an optional folder.
 3. Enter a fine-grained GitHub token restricted to that repository with **Contents: read and write** permission.
-4. Select **SQL** or **Python**, then open HackerRank or DataLemur from the platform buttons.
+4. Select **SQL** or **Python**, then open HackerRank, DataLemur, or LeetCode from the platform buttons.
 5. Solve a challenge on the provider's website and copy its individual challenge URL.
 6. Return to the publisher, paste the URL into **Challenge URL**, and select **Import question**.
 7. Review the imported challenge number, title, and question.
@@ -75,5 +75,5 @@ GitHub Pages cannot host this application unchanged because Pages does not run t
 - Grant only **Contents: read and write** permission.
 - Never commit a token to the repository or include it in a Markdown file.
 - The application does not save GitHub tokens.
-- Sign in to HackerRank and DataLemur only on their official websites. The publisher never requests or stores those login details.
-- DataLemur premium content and private provider submissions are not accessed.
+- Sign in to HackerRank, DataLemur, and LeetCode only on their official websites. The publisher never requests or stores those login details.
+- Only challenge details available to the publisher without a platform session are imported; account-protected content and private submissions remain on the provider's website.

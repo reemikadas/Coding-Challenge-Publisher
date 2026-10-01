@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 
 type ChallengeUrl =
   | { provider: "HackerRank"; contest: string; slug: string }
-  | { provider: "DataLemur"; slug: string };
+  | { provider: "DataLemur"; slug: string }
+  | { provider: "LeetCode"; slug: string };
 
 type ChallengeLanguage = "SQL" | "Python";
 
@@ -28,8 +29,78 @@ type DataLemurChallenge = {
   isGuarded?: boolean;
 };
 
+type LeetCodeChallenge = {
+  questionFrontendId?: string;
+  title?: string;
+  content?: string;
+  difficulty?: string;
+  isPaidOnly?: boolean;
+};
+
 function meaningful(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
+}
+
+function decodeHtmlEntities(value: string) {
+  const named: Record<string, string> = {
+    amp: "&",
+    apos: "'",
+    gt: ">",
+    hellip: "…",
+    ldquo: "“",
+    lsquo: "‘",
+    lt: "<",
+    mdash: "—",
+    nbsp: " ",
+    ndash: "–",
+    quot: '"',
+    rdquo: "”",
+    rsquo: "’",
+  };
+
+  return value.replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (entity, code: string) => {
+    if (code[0] === "#") {
+      const hexadecimal = code[1]?.toLowerCase() === "x";
+      const point = Number.parseInt(code.slice(hexadecimal ? 2 : 1), hexadecimal ? 16 : 10);
+      return Number.isFinite(point) ? String.fromCodePoint(point) : entity;
+    }
+    return named[code.toLowerCase()] ?? entity;
+  });
+}
+
+function htmlToMarkdown(html: string) {
+  const codeBlocks: string[] = [];
+  const inlineCode: string[] = [];
+  const withPlaceholders = html
+    .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, "")
+    .replace(/<pre[^>]*>([\s\S]*?)<\/pre>/gi, (_match, contents: string) => {
+      const text = decodeHtmlEntities(contents.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "")).trim();
+      const index = codeBlocks.push(`\n\n~~~text\n${text}\n~~~\n\n`) - 1;
+      return `LEETCODECODEBLOCK${index}END`;
+    })
+    .replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, (_match, contents: string) => {
+      const text = decodeHtmlEntities(contents.replace(/<[^>]+>/g, "")).trim();
+      const index = inlineCode.push(`\`${text.replace(/`/g, "\\`")}\``) - 1;
+      return `LEETCODEINLINECODE${index}END`;
+    });
+
+  return decodeHtmlEntities(withPlaceholders
+    .replace(/<h([1-6])[^>]*>/gi, (_match, level: string) => `\n\n${"#".repeat(Number(level) + 2)} `)
+    .replace(/<\/h[1-6]>/gi, "\n\n")
+    .replace(/<(strong|b)[^>]*>/gi, "**")
+    .replace(/<\/(strong|b)>/gi, "**")
+    .replace(/<(em|i)[^>]*>/gi, "*")
+    .replace(/<\/(em|i)>/gi, "*")
+    .replace(/<li[^>]*>/gi, "\n- ")
+    .replace(/<\/li>/gi, "")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/(p|div|ul|ol|table|tr)>/gi, "\n\n")
+    .replace(/<[^>]+>/g, ""))
+    .replace(/LEETCODECODEBLOCK(\d+)END/g, (_match, index: string) => codeBlocks[Number(index)] || "")
+    .replace(/LEETCODEINLINECODE(\d+)END/g, (_match, index: string) => inlineCode[Number(index)] || "")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 function parseChallengeUrl(rawUrl: string): ChallengeUrl {
@@ -37,7 +108,7 @@ function parseChallengeUrl(rawUrl: string): ChallengeUrl {
   try {
     url = new URL(rawUrl);
   } catch {
-    throw new Error("Paste a complete HackerRank or DataLemur question URL.");
+    throw new Error("Paste a complete HackerRank, DataLemur, or LeetCode question URL.");
   }
 
   if (url.protocol !== "https:") {
@@ -64,7 +135,14 @@ function parseChallengeUrl(rawUrl: string): ChallengeUrl {
     throw new Error("Paste an individual DataLemur question link, not the questions catalog.");
   }
 
-  throw new Error("Only public HackerRank and DataLemur question links are supported.");
+  if (["leetcode.com", "www.leetcode.com"].includes(hostname)) {
+    if (segments[0] === "problems" && segments[1]) {
+      return { provider: "LeetCode", slug: segments[1] };
+    }
+    throw new Error("Paste an individual LeetCode problem link, not the problem catalog.");
+  }
+
+  throw new Error("Only public HackerRank, DataLemur, and LeetCode question links are supported.");
 }
 
 async function importHackerRank(challenge: Extract<ChallengeUrl, { provider: "HackerRank" }>, language: ChallengeLanguage) {
@@ -166,6 +244,63 @@ async function importDataLemur(challenge: Extract<ChallengeUrl, { provider: "Dat
   };
 }
 
+async function importLeetCode(challenge: Extract<ChallengeUrl, { provider: "LeetCode" }>, language: ChallengeLanguage) {
+  const endpoint = "https://leetcode.com/graphql/";
+  const query = `query questionData($titleSlug: String!) {
+    question(titleSlug: $titleSlug) {
+      questionFrontendId
+      title
+      content
+      difficulty
+      isPaidOnly
+    }
+  }`;
+
+  let response: Response;
+  try {
+    response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+        referer: `https://leetcode.com/problems/${encodeURIComponent(challenge.slug)}/`,
+        "user-agent": "coding-challenge-publisher/1.0",
+      },
+      body: JSON.stringify({ query, variables: { titleSlug: challenge.slug } }),
+      signal: AbortSignal.timeout(12_000),
+    });
+  } catch {
+    throw new Error("LeetCode did not respond. Try again shortly.");
+  }
+
+  if (!response.ok) {
+    throw new Error(response.status === 404 ? "That public LeetCode problem was not found." : "LeetCode could not provide this problem.");
+  }
+
+  const payload = (await response.json().catch(() => null)) as { data?: { question?: LeetCodeChallenge | null }; errors?: unknown[] } | null;
+  const model = payload?.data?.question;
+  if (!model || !meaningful(model.title)) {
+    throw new Error("LeetCode returned an incomplete problem.");
+  }
+  if (model.isPaidOnly || !meaningful(model.content)) {
+    throw new Error("This LeetCode problem requires account or subscription access. Paste the question manually instead.");
+  }
+
+  const question = htmlToMarkdown(model.content);
+  if (!question) {
+    throw new Error("LeetCode returned an unreadable problem statement.");
+  }
+
+  return {
+    provider: "LeetCode" as const,
+    challengeNumber: meaningful(model.questionFrontendId) ? model.questionFrontendId.trim() : challenge.slug,
+    title: model.title.trim(),
+    question,
+    difficulty: meaningful(model.difficulty) ? model.difficulty.trim() : null,
+    runtime: language === "Python" ? "Python 3" : "MySQL",
+  };
+}
+
 export async function POST(request: Request) {
   let rawUrl = "";
   let language: ChallengeLanguage = "SQL";
@@ -185,11 +320,15 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = challenge.provider === "HackerRank" ? await importHackerRank(challenge, language) : await importDataLemur(challenge, language);
+    const result = challenge.provider === "HackerRank"
+      ? await importHackerRank(challenge, language)
+      : challenge.provider === "DataLemur"
+        ? await importDataLemur(challenge, language)
+        : await importLeetCode(challenge, language);
     return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : "The challenge could not be imported.";
-    const isRestricted = message.includes("premium") || message.includes("not publicly available");
+    const isRestricted = message.includes("premium") || message.includes("not publicly available") || message.includes("subscription access");
     return NextResponse.json({ message }, { status: isRestricted ? 403 : 502 });
   }
 }
