@@ -12,9 +12,9 @@ This `main` branch demonstrates the Markdown produced by the public [Coding Chal
 <!-- challenge-counts:start -->
 |  | HackerRank | DataLemur | LeetCode | Total Challenges Solved |
 | --- | ---: | ---: | ---: | ---: |
-| SQL | 29 | 54 | 24 | 107 |
+| SQL | 29 | 54 | 25 | 108 |
 | Python | 7 | 6 | 0 | 13 |
-| **Total** | **36** | **60** | **24** | **120** |
+| **Total** | **36** | **60** | **25** | **121** |
 <!-- challenge-counts:end -->
 
 These totals are updated automatically when Markdown files are added to the HackerRank, DataLemur, or LeetCode SQL and Python challenge folders.
