@@ -12,9 +12,9 @@ This `main` branch demonstrates the Markdown produced by the public [Coding Chal
 <!-- challenge-counts:start -->
 |  | HackerRank | DataLemur | LeetCode | StrataScratch | Total Challenges Solved |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| SQL | 29 | 54 | 50 | 0 | 133 |
+| SQL | 29 | 54 | 50 | 1 | 134 |
 | Python | 7 | 6 | 3 | 0 | 16 |
-| **Total** | **36** | **60** | **53** | **0** | **149** |
+| **Total** | **36** | **60** | **53** | **1** | **150** |
 <!-- challenge-counts:end -->
 
 These totals are updated automatically when Markdown files are added to the HackerRank, DataLemur, LeetCode, or StrataScratch SQL and Python challenge folders.
