@@ -6,8 +6,7 @@ Coding Challenge Publisher is a public web application for turning HackerRank, D
 
 ## Features
 
-- Import publicly accessible HackerRank, DataLemur, and LeetCode challenge descriptions from an individual challenge URL.
-- Connect a StrataScratch account through its official OAuth/MCP service and import questions available to that account.
+- Import publicly accessible HackerRank, DataLemur, LeetCode, and StrataScratch challenge descriptions from an individual challenge URL.
 - Document SQL solutions using MySQL or PostgreSQL.
 - Document Python solutions using Python 3.
 - Add multiple SQL and Python solutions to the same challenge file.
@@ -27,12 +26,11 @@ Coding Challenge Publisher is a public web application for turning HackerRank, D
 4. Select **SQL** or **Python**, then open HackerRank, DataLemur, LeetCode, or StrataScratch from the platform buttons.
 5. Solve a challenge on the provider's website and copy its individual challenge URL.
 6. Return to the publisher, paste the URL into **Challenge URL**, and select **Import question**.
-7. When importing from StrataScratch for the first time, complete the secure StrataScratch authorization and return to the publisher. The pending question imports automatically.
-8. Review the imported challenge number, title, and question.
-9. Choose the solution language and runtime or dialect, then paste the accepted solution.
-10. Select **Add another solution** when the same challenge should contain another SQL or Python approach.
-11. Review the generated filename and Markdown preview.
-12. Select **Create & push Markdown** to publish the file to GitHub.
+7. Review the imported challenge number, title, and question.
+8. Choose the solution language and runtime or dialect, then paste the accepted solution.
+9. Select **Add another solution** when the same challenge should contain another SQL or Python approach.
+10. Review the generated filename and Markdown preview.
+11. Select **Create & push Markdown** to publish the file to GitHub.
 
 ## Update an existing Markdown file
 
@@ -58,7 +56,7 @@ Open the local URL shown in the terminal.
 npm run build
 ```
 
-The application uses server-side API routes to import public challenge text, communicate with GitHub, and call StrataScratch's official OAuth/MCP service.
+The application uses server-side API routes to import public challenge text and communicate with GitHub.
 
 ## Repository branches
 
@@ -77,6 +75,5 @@ GitHub Pages cannot host this application unchanged because Pages does not run t
 - Grant only **Contents: read and write** permission.
 - Never commit a token to the repository or include it in a Markdown file.
 - The application does not save GitHub tokens.
-- Sign in to HackerRank, DataLemur, and LeetCode only on their official websites. The publisher never requests or stores those login details.
-- StrataScratch authorization happens on StrataScratch through OAuth. Access and refresh tokens are kept in an encrypted, HTTP-only browser cookie and are never exposed to the page or committed to GitHub.
+- Sign in to challenge platforms only on their official websites. The publisher never requests or stores those login details.
 - Only challenge details available to the publisher without a platform session are imported; account-protected content and private submissions remain on the provider's website.

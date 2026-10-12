@@ -58,12 +58,7 @@ export default function Home() {
     setIsImporting(true); setImported(false);
     try {
       const response = await fetch("/api/import-challenge", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: challengeUrl, language }) });
-      const result = (await response.json()) as { message?: string; connectUrl?: string; provider?: ChallengeProvider; challengeNumber?: string; title?: string; question?: string; runtime?: string };
-      if (response.status === 401 && result.connectUrl) {
-        sessionStorage.setItem("stratascratch-pending-import", JSON.stringify({ challengeUrl, language }));
-        window.location.assign(result.connectUrl);
-        return;
-      }
+      const result = (await response.json()) as { message?: string; provider?: ChallengeProvider; challengeNumber?: string; title?: string; question?: string; runtime?: string };
       if (!response.ok || !result.title || !result.question) throw new Error(result.message || "The challenge could not be imported.");
       setForm((current) => {
         const provider = result.provider || current.provider;
@@ -72,32 +67,6 @@ export default function Home() {
       setImported(true); setPublishedUrl(null); toast.success("Challenge question imported");
     } catch (error) { toast.error(error instanceof Error ? error.message : "Import failed."); } finally { setIsImporting(false); }
   }, []);
-
-  useEffect(() => {
-    const url = new URL(window.location.href);
-    const status = url.searchParams.get("stratascratch");
-    if (!status) return;
-    url.searchParams.delete("stratascratch");
-    window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
-    if (status === "connected") {
-      const pending = sessionStorage.getItem("stratascratch-pending-import");
-      sessionStorage.removeItem("stratascratch-pending-import");
-      if (pending) {
-        try {
-          const parsed = JSON.parse(pending) as { challengeUrl?: string; language?: ChallengeLanguage };
-          if (parsed.challengeUrl && (parsed.language === "SQL" || parsed.language === "Python")) {
-            const timer = window.setTimeout(() => void performImport(parsed.challengeUrl!, parsed.language!), 0);
-            return () => window.clearTimeout(timer);
-          }
-        } catch { /* Show the connection confirmation below. */ }
-      }
-      toast.success("StrataScratch connected securely");
-    } else if (status === "cancelled") {
-      toast.info("StrataScratch connection cancelled");
-    } else {
-      toast.error("StrataScratch could not be connected. Please try again.");
-    }
-  }, [performImport]);
 
   useEffect(() => {
     const modelContext = (document as Document & { modelContext?: { registerTool?: (tool: unknown, options?: { signal?: AbortSignal }) => void | Promise<void> } }).modelContext;
@@ -201,7 +170,7 @@ export default function Home() {
           <div>
             <FieldLabel id="challenge-url">Challenge URL</FieldLabel>
             <div className="import-row"><div className="url-input-wrap"><Link2 aria-hidden="true" /><Input id="challenge-url" type="url" placeholder="Paste a HackerRank, DataLemur, LeetCode, or StrataScratch question link" value={form.challengeUrl} onChange={(event) => update("challengeUrl", event.target.value)} /></div><Button variant="outline" className="import-button" disabled={!form.challengeUrl.trim() || isImporting} onClick={() => void performImport(form.challengeUrl, primarySolution.language)}>{isImporting ? <><Loader2 className="animate-spin" /> Importing…</> : <><Download /> Import question</>}</Button></div>
-            <p className={imported ? "import-note imported" : "import-note"}>{imported ? `${form.provider || "Challenge"} question imported. Add one or more accepted solutions below.` : `Public challenge links import directly; StrataScratch connects securely when needed.`}</p>
+            <p className={imported ? "import-note imported" : "import-note"}>{imported ? `${form.provider || "Challenge"} question imported. Add one or more accepted solutions below.` : `Public challenge links import directly. Account-restricted content is not accessed.`}</p>
           </div>
           <div className="title-grid"><div><FieldLabel id="challenge-number">Challenge #</FieldLabel><Input id="challenge-number" placeholder="1" value={form.challengeNumber} onChange={(event) => update("challengeNumber", event.target.value)} /></div><div><FieldLabel id="challenge-title">Title</FieldLabel><Input id="challenge-title" placeholder={primarySolution.language === "Python" ? "Arrays: Left Rotation" : "Occupations"} value={form.challengeTitle} onChange={(event) => update("challengeTitle", event.target.value)} /></div></div>
           <div className="editor-block"><div className="editor-label-row"><FieldLabel id="question">Challenge question</FieldLabel><span>{form.question.length.toLocaleString()} chars</span></div><Textarea id="question" className="question-area" placeholder="Paste the challenge description here…" value={form.question} onChange={(event) => update("question", event.target.value)} /></div>

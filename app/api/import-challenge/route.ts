@@ -1,6 +1,4 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { importStrataScratchQuestion, sessionCookieName, setSessionCookie } from "@/lib/stratascratch";
 
 type ChallengeUrl =
   | { provider: "HackerRank"; contest: string; slug: string }
@@ -38,6 +36,14 @@ type LeetCodeChallenge = {
   content?: string;
   difficulty?: string;
   isPaidOnly?: boolean;
+};
+
+type StrataScratchChallenge = {
+  id?: string;
+  questionShort?: string;
+  question?: string;
+  difficulty?: number;
+  isFreemium?: boolean;
 };
 
 function meaningful(value: unknown): value is string {
@@ -312,6 +318,62 @@ async function importLeetCode(challenge: Extract<ChallengeUrl, { provider: "Leet
   };
 }
 
+async function importStrataScratch(challenge: Extract<ChallengeUrl, { provider: "StrataScratch" }>, language: ChallengeLanguage) {
+  const endpoint = "https://api.stratascratch.com/graphql/";
+  const query = `query publicQuestion($id: Int!) {
+    educationalQuestion(id: $id) {
+      id
+      questionShort
+      question
+      difficulty
+      isFreemium
+    }
+  }`;
+
+  let response: Response;
+  try {
+    response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+        referer: `https://platform.stratascratch.com/coding/${encodeURIComponent(challenge.questionId)}-${encodeURIComponent(challenge.slug)}`,
+        "user-agent": "coding-challenge-publisher/1.0",
+      },
+      body: JSON.stringify({ query, variables: { id: Number(challenge.questionId) } }),
+      signal: AbortSignal.timeout(12_000),
+    });
+  } catch {
+    throw new Error("StrataScratch did not respond. Try again shortly.");
+  }
+
+  if (!response.ok) {
+    throw new Error(response.status === 404 ? "That public StrataScratch question was not found." : "StrataScratch could not provide this question.");
+  }
+
+  const payload = (await response.json().catch(() => null)) as {
+    data?: { educationalQuestion?: StrataScratchChallenge | null };
+    errors?: unknown[];
+  } | null;
+  const model = payload?.data?.educationalQuestion;
+  if (!model || !meaningful(model.questionShort)) {
+    throw new Error("StrataScratch returned an incomplete question.");
+  }
+  if (!model.isFreemium || !meaningful(model.question)) {
+    throw new Error("This StrataScratch question is not publicly available. Paste the question manually instead.");
+  }
+
+  const difficulty = model.difficulty === 1 ? "Easy" : model.difficulty === 2 ? "Medium" : model.difficulty === 3 ? "Hard" : null;
+  return {
+    provider: "StrataScratch" as const,
+    challengeNumber: meaningful(model.id) ? model.id.trim() : challenge.questionId,
+    title: model.questionShort.trim(),
+    question: model.question.trim(),
+    difficulty,
+    runtime: language === "Python" ? "Python 3" : "PostgreSQL",
+  };
+}
+
 export async function POST(request: Request) {
   let rawUrl = "";
   let language: ChallengeLanguage = "SQL";
@@ -331,37 +393,16 @@ export async function POST(request: Request) {
   }
 
   try {
-    if (challenge.provider === "StrataScratch") {
-      const cookieStore = await cookies();
-      const encryptedSession = cookieStore.get(sessionCookieName())?.value;
-      if (!encryptedSession) {
-        const response = NextResponse.json({
-          message: "Connect your StrataScratch account to import this challenge.",
-          connectUrl: "/api/stratascratch/connect",
-        }, { status: 401 });
-        response.headers.set("cache-control", "private, no-store");
-        return response;
-      }
-      const imported = await importStrataScratchQuestion(encryptedSession, challenge.questionId, challenge.slug, language);
-      const response = NextResponse.json(imported.challenge);
-      response.headers.set("cache-control", "private, no-store");
-      if (imported.encryptedSession) setSessionCookie(response, imported.encryptedSession);
-      return response;
-    }
-
     const result = challenge.provider === "HackerRank"
       ? await importHackerRank(challenge, language)
       : challenge.provider === "DataLemur"
         ? await importDataLemur(challenge, language)
-        : await importLeetCode(challenge, language);
+        : challenge.provider === "LeetCode"
+          ? await importLeetCode(challenge, language)
+          : await importStrataScratch(challenge, language);
     return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : "The challenge could not be imported.";
-    if (message.includes("Connect your StrataScratch") || message.includes("connection expired")) {
-      const response = NextResponse.json({ message, connectUrl: "/api/stratascratch/connect" }, { status: 401 });
-      response.headers.set("cache-control", "private, no-store");
-      return response;
-    }
     const isRestricted = message.includes("premium") || message.includes("not publicly available") || message.includes("subscription access");
     return NextResponse.json({ message }, { status: isRestricted ? 403 : 502 });
   }
