@@ -3,21 +3,21 @@
   Coding Challenge Publisher
 </h1>
 
-Coding Challenge Publisher is a reusable challenge journal and publishing application for anyone who wants to organize SQL and Python practice solutions on GitHub. Each challenge is stored as an individual Markdown file containing the public problem statement, a link to the original HackerRank, DataLemur, or LeetCode challenge, and one or more documented solutions.
+Coding Challenge Publisher is a reusable challenge journal and publishing application for anyone who wants to organize SQL and Python practice solutions on GitHub. Each challenge is stored as an individual Markdown file containing the problem statement, a link to the original HackerRank, DataLemur, LeetCode, or StrataScratch challenge, and one or more documented solutions.
 
 This `main` branch demonstrates the Markdown produced by the public [Coding Challenge Publisher](https://challenge-publisher.das-reemika.chatgpt.site/). The application source is maintained on the [`WebApp` branch](https://github.com/reemikadas/Coding-Challenge-Publisher/tree/WebApp).
 
 ## Challenges solved
 
 <!-- challenge-counts:start -->
-|  | HackerRank | DataLemur | LeetCode | Total Challenges Solved |
-| --- | ---: | ---: | ---: | ---: |
-| SQL | 29 | 54 | 50 | 133 |
-| Python | 7 | 6 | 3 | 16 |
-| **Total** | **36** | **60** | **53** | **149** |
+|  | HackerRank | DataLemur | LeetCode | StrataScratch | Total Challenges Solved |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| SQL | 29 | 54 | 50 | 0 | 133 |
+| Python | 7 | 6 | 3 | 0 | 16 |
+| **Total** | **36** | **60** | **53** | **0** | **149** |
 <!-- challenge-counts:end -->
 
-These totals are updated automatically when Markdown files are added to the HackerRank, DataLemur, or LeetCode SQL and Python challenge folders.
+These totals are updated automatically when Markdown files are added to the HackerRank, DataLemur, LeetCode, or StrataScratch SQL and Python challenge folders.
 
 ## Coding Challenge Publisher web app
 
@@ -26,6 +26,7 @@ These totals are updated automatically when Markdown files are added to the Hack
 ## What the web app supports
 
 - Public HackerRank, DataLemur, and LeetCode challenge URLs.
+- Secure StrataScratch imports through its official OAuth/MCP service.
 - SQL solutions using MySQL or PostgreSQL.
 - Python solutions using Python 3.
 - Multiple SQL and Python solutions in one Markdown file.
@@ -51,9 +52,9 @@ These totals are updated automatically when Markdown files are added to the Hack
    6. Select **Generate token**, copy it immediately, and paste it into **Fine-grained token** in the web app.
    7. Keep the token private. Revoke or rotate it from GitHub settings if it is exposed.
 5. Select **SQL** or **Python** at the top of the app.
-6. Select the HackerRank, DataLemur, or LeetCode logo to open the appropriate challenge catalog. Hover over a logo to see the platform name.
+6. Select the HackerRank, DataLemur, LeetCode, or StrataScratch logo to open the appropriate challenge catalog. Hover over a logo to see the platform name.
 7. Sign in on the provider's official website, solve a challenge, and copy the individual challenge URL from the browser address bar.
-8. Return to Coding Challenge Publisher, paste the URL into **Challenge URL**, and select **Import question**. Catalog pages are not supported.
+8. Return to Coding Challenge Publisher, paste the URL into **Challenge URL**, and select **Import question**. Catalog pages are not supported. The first StrataScratch import opens its official authorization page and resumes automatically after you connect your account.
 9. Review the imported challenge number, title, and question.
 10. For each solution:
     - Select **SQL** or **Python**.
@@ -73,6 +74,7 @@ These totals are updated automatically when Markdown files are added to the Hack
 
 ## Supported sources and privacy
 
-- The importer reads challenge details from supported HackerRank, DataLemur, and LeetCode URLs.
+- The importer reads challenge details from supported HackerRank, DataLemur, and LeetCode URLs and uses StrataScratch's official OAuth/MCP service for StrataScratch questions.
 - The application does not request or store HackerRank, DataLemur, or LeetCode usernames, passwords, cookies, or login sessions.
+- StrataScratch authorization happens on StrataScratch. Its access tokens stay in an encrypted, HTTP-only browser cookie and are never exposed to the page or published files.
 - GitHub tokens are used only for the requested GitHub operation and are not saved by the application.

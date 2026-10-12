@@ -11,6 +11,8 @@ on:
       - "DataLemur_Python_Challenges/**/*.md"
       - "LeetCode_SQL_Challenges/**/*.md"
       - "LeetCode_Python_Challenges/**/*.md"
+      - "StrataScratch_SQL_Challenges/**/*.md"
+      - "StrataScratch_Python_Challenges/**/*.md"
   workflow_dispatch:
 
 permissions:
@@ -46,7 +48,9 @@ jobs:
           data_lemur_python_count="$(count_markdown_files DataLemur_Python_Challenges)"
           leetcode_sql_count="$(count_markdown_files LeetCode_SQL_Challenges)"
           leetcode_python_count="$(count_markdown_files LeetCode_Python_Challenges)"
-          python3 - "$hacker_rank_sql_count" "$data_lemur_sql_count" "$hacker_rank_python_count" "$data_lemur_python_count" "$leetcode_sql_count" "$leetcode_python_count" <<'PY'
+          stratascratch_sql_count="$(count_markdown_files StrataScratch_SQL_Challenges)"
+          stratascratch_python_count="$(count_markdown_files StrataScratch_Python_Challenges)"
+          python3 - "$hacker_rank_sql_count" "$data_lemur_sql_count" "$hacker_rank_python_count" "$data_lemur_python_count" "$leetcode_sql_count" "$leetcode_python_count" "$stratascratch_sql_count" "$stratascratch_python_count" <<'PY'
           from pathlib import Path
           import re
           import sys
@@ -59,18 +63,21 @@ jobs:
           data_lemur_python = int(sys.argv[4])
           leetcode_sql = int(sys.argv[5])
           leetcode_python = int(sys.argv[6])
-          sql_total = hacker_rank_sql + data_lemur_sql + leetcode_sql
-          python_total = hacker_rank_python + data_lemur_python + leetcode_python
+          stratascratch_sql = int(sys.argv[7])
+          stratascratch_python = int(sys.argv[8])
+          sql_total = hacker_rank_sql + data_lemur_sql + leetcode_sql + stratascratch_sql
+          python_total = hacker_rank_python + data_lemur_python + leetcode_python + stratascratch_python
           hacker_rank_total = hacker_rank_sql + hacker_rank_python
           data_lemur_total = data_lemur_sql + data_lemur_python
           leetcode_total = leetcode_sql + leetcode_python
+          stratascratch_total = stratascratch_sql + stratascratch_python
           grand_total = sql_total + python_total
           replacement = f"""<!-- challenge-counts:start -->
-          |  | HackerRank | DataLemur | LeetCode | Total Challenges Solved |
-          | --- | ---: | ---: | ---: | ---: |
-          | SQL | {hacker_rank_sql} | {data_lemur_sql} | {leetcode_sql} | {sql_total} |
-          | Python | {hacker_rank_python} | {data_lemur_python} | {leetcode_python} | {python_total} |
-          | **Total** | **{hacker_rank_total}** | **{data_lemur_total}** | **{leetcode_total}** | **{grand_total}** |
+          |  | HackerRank | DataLemur | LeetCode | StrataScratch | Total Challenges Solved |
+          | --- | ---: | ---: | ---: | ---: | ---: |
+          | SQL | {hacker_rank_sql} | {data_lemur_sql} | {leetcode_sql} | {stratascratch_sql} | {sql_total} |
+          | Python | {hacker_rank_python} | {data_lemur_python} | {leetcode_python} | {stratascratch_python} | {python_total} |
+          | **Total** | **{hacker_rank_total}** | **{data_lemur_total}** | **{leetcode_total}** | **{stratascratch_total}** | **{grand_total}** |
           <!-- challenge-counts:end -->"""
           updated, replacements = re.subn(
               r"<!-- challenge-counts:start -->.*?<!-- challenge-counts:end -->",
