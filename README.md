@@ -26,7 +26,7 @@ These totals are updated automatically when Markdown files are added to the Hack
 ## What the web app supports
 
 - Public HackerRank, DataLemur, and LeetCode challenge URLs.
-- Secure StrataScratch imports through its official OAuth/MCP service.
+- Direct imports for publicly accessible StrataScratch questions without requiring a platform login.
 - SQL solutions using MySQL or PostgreSQL.
 - Python solutions using Python 3.
 - Multiple SQL and Python solutions in one Markdown file.
@@ -54,7 +54,7 @@ These totals are updated automatically when Markdown files are added to the Hack
 5. Select **SQL** or **Python** at the top of the app.
 6. Select the HackerRank, DataLemur, LeetCode, or StrataScratch logo to open the appropriate challenge catalog. Hover over a logo to see the platform name.
 7. Sign in on the provider's official website, solve a challenge, and copy the individual challenge URL from the browser address bar.
-8. Return to Coding Challenge Publisher, paste the URL into **Challenge URL**, and select **Import question**. Catalog pages are not supported. The first StrataScratch import opens its official authorization page and resumes automatically after you connect your account.
+8. Return to Coding Challenge Publisher, paste the URL into **Challenge URL**, and select **Import question**. Catalog pages are not supported, and account-restricted questions must be entered manually.
 9. Review the imported challenge number, title, and question.
 10. For each solution:
     - Select **SQL** or **Python**.
@@ -74,7 +74,6 @@ These totals are updated automatically when Markdown files are added to the Hack
 
 ## Supported sources and privacy
 
-- The importer reads challenge details from supported HackerRank, DataLemur, and LeetCode URLs and uses StrataScratch's official OAuth/MCP service for StrataScratch questions.
+- The importer reads publicly accessible challenge details from supported HackerRank, DataLemur, LeetCode, and StrataScratch URLs.
 - The application does not request or store HackerRank, DataLemur, or LeetCode usernames, passwords, cookies, or login sessions.
-- StrataScratch authorization happens on StrataScratch. Its access tokens stay in an encrypted, HTTP-only browser cookie and are never exposed to the page or published files.
 - GitHub tokens are used only for the requested GitHub operation and are not saved by the application.
