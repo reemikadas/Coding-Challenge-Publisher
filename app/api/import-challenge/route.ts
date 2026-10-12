@@ -1,9 +1,12 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { importStrataScratchQuestion, sessionCookieName, setSessionCookie } from "@/lib/stratascratch";
 
 type ChallengeUrl =
   | { provider: "HackerRank"; contest: string; slug: string }
   | { provider: "DataLemur"; slug: string }
-  | { provider: "LeetCode"; slug: string };
+  | { provider: "LeetCode"; slug: string }
+  | { provider: "StrataScratch"; questionId: string; slug: string };
 
 type ChallengeLanguage = "SQL" | "Python";
 
@@ -108,7 +111,7 @@ function parseChallengeUrl(rawUrl: string): ChallengeUrl {
   try {
     url = new URL(rawUrl);
   } catch {
-    throw new Error("Paste a complete HackerRank, DataLemur, or LeetCode question URL.");
+    throw new Error("Paste a complete HackerRank, DataLemur, LeetCode, or StrataScratch question URL.");
   }
 
   if (url.protocol !== "https:") {
@@ -142,7 +145,15 @@ function parseChallengeUrl(rawUrl: string): ChallengeUrl {
     throw new Error("Paste an individual LeetCode problem link, not the problem catalog.");
   }
 
-  throw new Error("Only public HackerRank, DataLemur, and LeetCode question links are supported.");
+  if (["platform.stratascratch.com", "stratascratch.com", "www.stratascratch.com"].includes(hostname)) {
+    if (segments[0] === "coding" && segments[1]) {
+      const match = segments[1].match(/^(\d+)(?:-(.+))?$/);
+      if (match) return { provider: "StrataScratch", questionId: match[1], slug: match[2] || segments[1] };
+    }
+    throw new Error("Paste an individual StrataScratch coding question link, not the question catalog.");
+  }
+
+  throw new Error("Only HackerRank, DataLemur, LeetCode, and StrataScratch question links are supported.");
 }
 
 async function importHackerRank(challenge: Extract<ChallengeUrl, { provider: "HackerRank" }>, language: ChallengeLanguage) {
@@ -320,6 +331,24 @@ export async function POST(request: Request) {
   }
 
   try {
+    if (challenge.provider === "StrataScratch") {
+      const cookieStore = await cookies();
+      const encryptedSession = cookieStore.get(sessionCookieName())?.value;
+      if (!encryptedSession) {
+        const response = NextResponse.json({
+          message: "Connect your StrataScratch account to import this challenge.",
+          connectUrl: "/api/stratascratch/connect",
+        }, { status: 401 });
+        response.headers.set("cache-control", "private, no-store");
+        return response;
+      }
+      const imported = await importStrataScratchQuestion(encryptedSession, challenge.questionId, challenge.slug, language);
+      const response = NextResponse.json(imported.challenge);
+      response.headers.set("cache-control", "private, no-store");
+      if (imported.encryptedSession) setSessionCookie(response, imported.encryptedSession);
+      return response;
+    }
+
     const result = challenge.provider === "HackerRank"
       ? await importHackerRank(challenge, language)
       : challenge.provider === "DataLemur"
@@ -328,6 +357,11 @@ export async function POST(request: Request) {
     return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : "The challenge could not be imported.";
+    if (message.includes("Connect your StrataScratch") || message.includes("connection expired")) {
+      const response = NextResponse.json({ message, connectUrl: "/api/stratascratch/connect" }, { status: 401 });
+      response.headers.set("cache-control", "private, no-store");
+      return response;
+    }
     const isRestricted = message.includes("premium") || message.includes("not publicly available") || message.includes("subscription access");
     return NextResponse.json({ message }, { status: isRestricted ? 403 : 502 });
   }

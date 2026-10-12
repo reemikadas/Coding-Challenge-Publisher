@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { CheckCircle2, Copy, Database, Download, Eye, FileCode2, GitFork, Link2, Loader2, LockKeyhole, Plus, RotateCcw, Send, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster } from "@/components/ui/sonner";
 
-type ChallengeProvider = "" | "HackerRank" | "DataLemur" | "LeetCode";
+type ChallengeProvider = "" | "HackerRank" | "DataLemur" | "LeetCode" | "StrataScratch";
 type ChallengeLanguage = "SQL" | "Python";
 type SolutionState = { id: number; language: ChallengeLanguage; runtime: string; code: string };
 type FormState = { provider: ChallengeProvider; challengeNumber: string; challengeTitle: string; challengeUrl: string; question: string; solutions: SolutionState[]; repository: string; branch: string; directory: string; token: string; overwrite: boolean };
-const DEFAULT_FOLDERS = ["HackerRank_SQL_Challenges", "DataLemur_SQL_Challenges", "LeetCode_SQL_Challenges", "HackerRank_Python_Challenges", "DataLemur_Python_Challenges", "LeetCode_Python_Challenges"];
+const DEFAULT_FOLDERS = ["HackerRank_SQL_Challenges", "DataLemur_SQL_Challenges", "LeetCode_SQL_Challenges", "StrataScratch_SQL_Challenges", "HackerRank_Python_Challenges", "DataLemur_Python_Challenges", "LeetCode_Python_Challenges", "StrataScratch_Python_Challenges"];
 const initialForm: FormState = { provider: "", challengeNumber: "", challengeTitle: "", challengeUrl: "", question: "", solutions: [{ id: 1, language: "SQL", runtime: "MySQL", code: "" }], repository: "", branch: "main", directory: "HackerRank_SQL_Challenges", token: "", overwrite: false };
 
 function filenamePart(value: string) { return value.trim().replace(/[’']/g, "").replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_+|_+$/g, ""); }
@@ -22,7 +22,7 @@ function filenameFor(challengeNumber: string, challengeTitle: string) { const nu
 function defaultFolder(provider: ChallengeProvider, language: ChallengeLanguage) { const platform = provider || "HackerRank"; return language === "Python" ? `${platform}_Python_Challenges` : `${platform}_SQL_Challenges`; }
 function markdownFor(form: FormState) {
   const primaryLanguage = form.solutions[0]?.language || "SQL";
-  const providerPrefix = form.provider === "DataLemur" || form.provider === "LeetCode" ? `${form.provider} ` : "";
+  const providerPrefix = form.provider && form.provider !== "HackerRank" ? `${form.provider} ` : "";
   const heading = [form.challengeNumber && `${providerPrefix}Challenge ${form.challengeNumber}`, form.challengeTitle].filter(Boolean).join(": ") || `${primaryLanguage} Challenge`;
   const source = form.challengeUrl ? `\n**Source:** [View challenge](${form.challengeUrl})\n` : "";
   const solutionSections = form.solutions.map((solution, index) => {
@@ -50,8 +50,54 @@ export default function Home() {
   const markdown = useMemo(() => hasChallengeDraft ? markdownFor(form) : "", [form, hasChallengeDraft]);
   const filename = existingFilename || filenameFor(form.challengeNumber, form.challengeTitle);
   const platformUrls = primarySolution.language === "Python"
-    ? { HackerRank: "https://www.hackerrank.com/domains/python", DataLemur: "https://datalemur.com/questions?category=Python", LeetCode: "https://leetcode.com/problemset/" }
-    : { HackerRank: "https://www.hackerrank.com/domains/sql", DataLemur: "https://datalemur.com/questions?category=SQL", LeetCode: "https://leetcode.com/problemset/database/" };
+    ? { HackerRank: "https://www.hackerrank.com/domains/python", DataLemur: "https://datalemur.com/questions?category=Python", LeetCode: "https://leetcode.com/problemset/", StrataScratch: "https://platform.stratascratch.com/coding" }
+    : { HackerRank: "https://www.hackerrank.com/domains/sql", DataLemur: "https://datalemur.com/questions?category=SQL", LeetCode: "https://leetcode.com/problemset/database/", StrataScratch: "https://platform.stratascratch.com/coding" };
+
+  const performImport = useCallback(async (challengeUrl: string, language: ChallengeLanguage) => {
+    if (!challengeUrl.trim()) return;
+    setIsImporting(true); setImported(false);
+    try {
+      const response = await fetch("/api/import-challenge", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: challengeUrl, language }) });
+      const result = (await response.json()) as { message?: string; connectUrl?: string; provider?: ChallengeProvider; challengeNumber?: string; title?: string; question?: string; runtime?: string };
+      if (response.status === 401 && result.connectUrl) {
+        sessionStorage.setItem("stratascratch-pending-import", JSON.stringify({ challengeUrl, language }));
+        window.location.assign(result.connectUrl);
+        return;
+      }
+      if (!response.ok || !result.title || !result.question) throw new Error(result.message || "The challenge could not be imported.");
+      setForm((current) => {
+        const provider = result.provider || current.provider;
+        return { ...current, provider, challengeUrl, challengeNumber: result.challengeNumber || current.challengeNumber, challengeTitle: result.title!, question: result.question!, solutions: current.solutions.map((solution, index) => index === 0 ? { ...solution, language, runtime: result.runtime || solution.runtime } : solution), directory: DEFAULT_FOLDERS.includes(current.directory) ? defaultFolder(provider, language) : current.directory };
+      });
+      setImported(true); setPublishedUrl(null); toast.success("Challenge question imported");
+    } catch (error) { toast.error(error instanceof Error ? error.message : "Import failed."); } finally { setIsImporting(false); }
+  }, []);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const status = url.searchParams.get("stratascratch");
+    if (!status) return;
+    url.searchParams.delete("stratascratch");
+    window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+    if (status === "connected") {
+      const pending = sessionStorage.getItem("stratascratch-pending-import");
+      sessionStorage.removeItem("stratascratch-pending-import");
+      if (pending) {
+        try {
+          const parsed = JSON.parse(pending) as { challengeUrl?: string; language?: ChallengeLanguage };
+          if (parsed.challengeUrl && (parsed.language === "SQL" || parsed.language === "Python")) {
+            const timer = window.setTimeout(() => void performImport(parsed.challengeUrl!, parsed.language!), 0);
+            return () => window.clearTimeout(timer);
+          }
+        } catch { /* Show the connection confirmation below. */ }
+      }
+      toast.success("StrataScratch connected securely");
+    } else if (status === "cancelled") {
+      toast.info("StrataScratch connection cancelled");
+    } else {
+      toast.error("StrataScratch could not be connected. Please try again.");
+    }
+  }, [performImport]);
 
   useEffect(() => {
     const modelContext = (document as Document & { modelContext?: { registerTool?: (tool: unknown, options?: { signal?: AbortSignal }) => void | Promise<void> } }).modelContext;
@@ -59,13 +105,13 @@ export default function Home() {
     const lifecycle = new AbortController();
     const tool = {
       name: "stage_coding_challenge", title: "Stage coding challenge", description: "Fill the visible SQL or Python challenge editor so the user can review the generated Markdown before publishing.",
-      inputSchema: { type: "object", properties: { challengeNumber: { type: "string" }, challengeTitle: { type: "string" }, challengeUrl: { type: "string" }, provider: { type: "string", enum: ["HackerRank", "DataLemur", "LeetCode"] }, language: { type: "string", enum: ["SQL", "Python"] }, question: { type: "string" }, solution: { type: "string" }, runtime: { type: "string" } }, required: ["challengeNumber", "challengeTitle", "language", "question", "solution"], additionalProperties: false },
+      inputSchema: { type: "object", properties: { challengeNumber: { type: "string" }, challengeTitle: { type: "string" }, challengeUrl: { type: "string" }, provider: { type: "string", enum: ["HackerRank", "DataLemur", "LeetCode", "StrataScratch"] }, language: { type: "string", enum: ["SQL", "Python"] }, question: { type: "string" }, solution: { type: "string" }, runtime: { type: "string" } }, required: ["challengeNumber", "challengeTitle", "language", "question", "solution"], additionalProperties: false },
       annotations: { readOnlyHint: false, untrustedContentHint: true },
       execute(input: unknown) {
         if (!input || typeof input !== "object") throw new Error("Challenge details are required.");
         const values = input as Record<string, unknown>;
         for (const key of ["challengeNumber", "challengeTitle", "language", "question", "solution"]) if (typeof values[key] !== "string" || !values[key]) throw new Error(`${key} is required.`);
-        const provider = values.provider === "DataLemur" || values.provider === "HackerRank" || values.provider === "LeetCode" ? values.provider : "";
+        const provider = values.provider === "DataLemur" || values.provider === "HackerRank" || values.provider === "LeetCode" || values.provider === "StrataScratch" ? values.provider : "";
         const language: ChallengeLanguage = values.language === "Python" ? "Python" : "SQL";
         setForm((current) => ({ ...current, provider, challengeNumber: values.challengeNumber as string, challengeTitle: values.challengeTitle as string, challengeUrl: typeof values.challengeUrl === "string" ? values.challengeUrl : "", question: values.question as string, solutions: [{ id: 1, language, code: values.solution as string, runtime: typeof values.runtime === "string" && values.runtime ? values.runtime : language === "Python" ? "Python 3" : "MySQL" }], directory: defaultFolder(provider, language) }));
         setPublishedUrl(null);
@@ -106,17 +152,6 @@ export default function Home() {
       toast.success("Existing Markdown loaded and ready to update");
     } catch (error) { toast.error(error instanceof Error ? error.message : "Loading failed."); } finally { setIsLoadingExisting(false); }
   }
-  async function importChallenge() {
-    if (!form.challengeUrl.trim()) return;
-    setIsImporting(true); setImported(false);
-    try {
-      const response = await fetch("/api/import-challenge", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: form.challengeUrl, language: primarySolution.language }) });
-      const result = (await response.json()) as { message?: string; provider?: ChallengeProvider; challengeNumber?: string; title?: string; question?: string; runtime?: string };
-      if (!response.ok || !result.title || !result.question) throw new Error(result.message || "The challenge could not be imported.");
-      setForm((current) => { const provider = result.provider || current.provider; const language = current.solutions[0].language; return { ...current, provider, challengeNumber: result.challengeNumber || current.challengeNumber, challengeTitle: result.title!, question: result.question!, solutions: current.solutions.map((solution, index) => index === 0 ? { ...solution, runtime: result.runtime || solution.runtime } : solution), directory: DEFAULT_FOLDERS.includes(current.directory) ? defaultFolder(provider, language) : current.directory }; });
-      setImported(true); setPublishedUrl(null); toast.success("Challenge question imported");
-    } catch (error) { toast.error(error instanceof Error ? error.message : "Import failed."); } finally { setIsImporting(false); }
-  }
   function clearChallenge() { setForm((current) => ({ ...current, provider: "", challengeNumber: "", challengeTitle: "", challengeUrl: "", question: "", solutions: [{ ...current.solutions[0], code: "" }], overwrite: false })); setExistingPath(""); setExistingFilename(""); setImported(false); setPublishedUrl(null); toast.success("Ready for the next challenge"); }
   async function copySolution(solution: SolutionState) { if (!solution.code) return; await navigator.clipboard.writeText(solution.code); toast.success(`${solution.language} solution copied`); }
   async function publish() {
@@ -143,6 +178,7 @@ export default function Home() {
           <a className="platform-button" href={platformUrls.HackerRank} target="_blank" rel="noreferrer" aria-label="Open HackerRank" data-tooltip="HackerRank"><span className="platform-logo hackerrank-logo" aria-hidden="true" /></a>
           <a className="platform-button" href={platformUrls.DataLemur} target="_blank" rel="noreferrer" aria-label="Open DataLemur" data-tooltip="DataLemur"><span className="platform-logo datalemur-logo" aria-hidden="true" /></a>
           <a className="platform-button" href={platformUrls.LeetCode} target="_blank" rel="noreferrer" aria-label="Open LeetCode" data-tooltip="LeetCode"><span className="platform-logo leetcode-logo" aria-hidden="true" /></a>
+          <a className="platform-button" href={platformUrls.StrataScratch} target="_blank" rel="noreferrer" aria-label="Open StrataScratch" data-tooltip="StrataScratch"><span className="platform-logo stratascratch-logo" aria-hidden="true" /></a>
         </div>
         <p>Turn coding challenges into a clean notebook and push to GitHub.</p>
       </section>
@@ -164,8 +200,8 @@ export default function Home() {
           <div className="section-heading"><div><p className="step-label">01 / Compose</p><h2 id="editor-title">Challenge + solutions</h2></div></div>
           <div>
             <FieldLabel id="challenge-url">Challenge URL</FieldLabel>
-            <div className="import-row"><div className="url-input-wrap"><Link2 aria-hidden="true" /><Input id="challenge-url" type="url" placeholder="Paste a HackerRank, DataLemur, or LeetCode question link" value={form.challengeUrl} onChange={(event) => update("challengeUrl", event.target.value)} /></div><Button variant="outline" className="import-button" disabled={!form.challengeUrl.trim() || isImporting} onClick={importChallenge}>{isImporting ? <><Loader2 className="animate-spin" /> Importing…</> : <><Download /> Import question</>}</Button></div>
-            <p className={imported ? "import-note imported" : "import-note"}>{imported ? `${form.provider || "Challenge"} question imported. Add one or more accepted solutions below.` : `Imports publicly accessible challenge details from supported platforms.`}</p>
+            <div className="import-row"><div className="url-input-wrap"><Link2 aria-hidden="true" /><Input id="challenge-url" type="url" placeholder="Paste a HackerRank, DataLemur, LeetCode, or StrataScratch question link" value={form.challengeUrl} onChange={(event) => update("challengeUrl", event.target.value)} /></div><Button variant="outline" className="import-button" disabled={!form.challengeUrl.trim() || isImporting} onClick={() => void performImport(form.challengeUrl, primarySolution.language)}>{isImporting ? <><Loader2 className="animate-spin" /> Importing…</> : <><Download /> Import question</>}</Button></div>
+            <p className={imported ? "import-note imported" : "import-note"}>{imported ? `${form.provider || "Challenge"} question imported. Add one or more accepted solutions below.` : `Public challenge links import directly; StrataScratch connects securely when needed.`}</p>
           </div>
           <div className="title-grid"><div><FieldLabel id="challenge-number">Challenge #</FieldLabel><Input id="challenge-number" placeholder="1" value={form.challengeNumber} onChange={(event) => update("challengeNumber", event.target.value)} /></div><div><FieldLabel id="challenge-title">Title</FieldLabel><Input id="challenge-title" placeholder={primarySolution.language === "Python" ? "Arrays: Left Rotation" : "Occupations"} value={form.challengeTitle} onChange={(event) => update("challengeTitle", event.target.value)} /></div></div>
           <div className="editor-block"><div className="editor-label-row"><FieldLabel id="question">Challenge question</FieldLabel><span>{form.question.length.toLocaleString()} chars</span></div><Textarea id="question" className="question-area" placeholder="Paste the challenge description here…" value={form.question} onChange={(event) => update("question", event.target.value)} /></div>
