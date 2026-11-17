@@ -17,7 +17,7 @@ This `main` branch demonstrates the Markdown produced by the public [Coding Chal
 | **Total** | **36** | **64** | **53** | **32** | **185** |
 <!-- challenge-counts:end -->
 
-These totals are updated automatically when Markdown files are added to the HackerRank, DataLemur, LeetCode, or StrataScratch SQL and Python challenge folders.
+The Coding Challenge Publisher updates these totals when it adds Markdown files to the tracked HackerRank, DataLemur, LeetCode, or StrataScratch SQL and Python challenge folders. The repository workflow remains available for manual recounts.
 
 ## Coding Challenge Publisher web app
 

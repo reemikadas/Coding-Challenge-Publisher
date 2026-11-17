@@ -1,18 +1,6 @@
 name: Update challenge counts
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "HackerRank_SQL_Challenges/**/*.md"
-      - "DataLemur_SQL_Challenges/**/*.md"
-      - "HackerRank_Python_Challenges/**/*.md"
-      - "DataLemur_Python_Challenges/**/*.md"
-      - "LeetCode_SQL_Challenges/**/*.md"
-      - "LeetCode_Python_Challenges/**/*.md"
-      - "StrataScratch_SQL_Challenges/**/*.md"
-      - "StrataScratch_Python_Challenges/**/*.md"
   workflow_dispatch:
 
 permissions:
